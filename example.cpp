@@ -1,16 +1,19 @@
 #include <emscripten/bind.h>
+#include <emscripten/val.h>
 
-using namespace emscripten;
+auto test(const emscripten::val &input) {
+  const auto data = emscripten::convertJSArrayToNumberVector<float>(input); // copies data
 
-float lerp(float a, float b, float t) {
-    return (1 - t) * a + t * b;
-}
+  // make a typed array view of the output
+  emscripten::val view{ emscripten::typed_memory_view(data.size(), data.data()) };
+  // create new typed array to return
+  auto result = emscripten::val::global("Uint8Array").new_(data.size());
+  // copy data from generated output to return object
+  result.call<void>("set", view);
 
-uint8_t showArr(uint8_t arr) {
-    return arr;
+  return result;
 }
 
 EMSCRIPTEN_BINDINGS(my_module) {
-    function("lerp", &lerp);
-    function("showArr", &showArr);
+  emscripten::function("test", &test);
 }
