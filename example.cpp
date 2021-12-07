@@ -2,7 +2,12 @@
 #include <emscripten/val.h>
 
 auto test(const emscripten::val &input) {
-  const auto data = emscripten::convertJSArrayToNumberVector<float>(input); // copies data
+  auto data = emscripten::convertJSArrayToNumberVector<float>(input); // copies data
+
+    int i;
+    for (i=0;i < data.size();i++) {
+        data[i] = data[i] * 3;
+    }
 
   // make a typed array view of the output
   emscripten::val view{ emscripten::typed_memory_view(data.size(), data.data()) };
