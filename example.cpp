@@ -1,12 +1,16 @@
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
+#include <iostream>
 
 auto test(const emscripten::val &input) {
-  auto data = emscripten::convertJSArrayToNumberVector<float>(input); // copies data
+  auto data = emscripten::convertJSArrayToNumberVector<int>(input); // copies data
 
     int i;
-    for (i=0;i < data.size();i++) {
-        data[i] = data[i] * 3;
+    for (i = 0; i < data.size(); i += 4) {
+        int avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        data[i]     = avg; // red
+        data[i + 1] = avg; // green
+        data[i + 2] = avg; // blue
     }
 
   // make a typed array view of the output
