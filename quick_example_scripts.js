@@ -22,11 +22,12 @@ var Module = {
         let imageData = ctx.getImageData(0, 0, this.width, this.height);
 
         btn_js.addEventListener("click", () => {
-          newImgJS.src = "";
+          // newImgJS.src = "";
+          console.log("elo")
           makeNewImageJS(imageData);
         })
         btn_cpp.addEventListener("click", () => {
-          newImgCPP.src = "";
+          // newImgCPP.src = "";
           makeNewImageCPP(imageData);
         })
         
