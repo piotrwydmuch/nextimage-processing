@@ -7,8 +7,6 @@
   <title>Document</title>
 </head>
 <body>
-  <!-- <button id="makeNewImgJS">js</button>
-    <button id="makeNewImgCPP">cpp</button> -->
     <div class="header">
     <span>
       <h1>
@@ -35,7 +33,9 @@
       <img id="newImgCPP" src="" alt="New Image">
     </div>
   </div>
-  <!-- <img id="newImgCPP" src="" alt="New Image"> -->
+  <div class="info">
+    <p class="info__details"></p>
+  </div>
   <script type="text/javascript">
     var Module = {
       onRuntimeInitialized: function() {
@@ -44,7 +44,6 @@
     };
   </script>
   <script src="quick_example_scripts.js"></script>
-  <!-- <script type="module" src="script.js"></script> -->
   <script src="example.js"></script>
 </body>
 <style>
@@ -95,6 +94,12 @@
   .results div > button:hover {
     background-color: rgb(255, 187, 103);
     cursor: pointer;
+  }
+  .info__details {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left: 12px;
+    font-size: 18px;
+    color: rgb(65, 65, 255);
   }
 </style>
 </html>

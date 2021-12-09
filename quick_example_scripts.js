@@ -2,7 +2,7 @@ const btn_js = document.querySelector(".transform__js")
 const btn_cpp = document.querySelector(".transform__cpp")
 const newImgJS = document.querySelector("#newImgJS");
 const newImgCPP = document.querySelector("#newImgCPP");
-
+const infoDetails = document.querySelector(".info__details")
 
 var Module = {
   onRuntimeInitialized: function () {
@@ -22,12 +22,11 @@ var Module = {
         let imageData = ctx.getImageData(0, 0, this.width, this.height);
 
         btn_js.addEventListener("click", () => {
-          // newImgJS.src = "";
-          console.log("elo")
+          newImgJS.src = "";
           makeNewImageJS(imageData);
         })
         btn_cpp.addEventListener("click", () => {
-          // newImgCPP.src = "";
+          newImgCPP.src = "";
           makeNewImageCPP(imageData);
         })
         
@@ -55,7 +54,9 @@ var Module = {
       }
       
       const t1 = performance.now();
-      console.log(`JS processing took ${t1 - t0} milliseconds.`);
+      let info = `JS processing took ${t1 - t0} milliseconds.`
+      console.info(info)
+      infoDetails.textContent = info
       
       ctx.putImageData(new ImageData(
         new Uint8ClampedArray(data),
@@ -81,7 +82,9 @@ var Module = {
       newData = Module.test(data);
 
       const t1 = performance.now();
-      console.log(`C++ processing took ${t1 - t0} milliseconds.`);
+      let info = `C++ processing took ${t1 - t0} milliseconds.`
+      console.info(info)
+      infoDetails.textContent = info
 
       ctx.putImageData(
         new ImageData(
