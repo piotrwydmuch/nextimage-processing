@@ -10,11 +10,23 @@
   <h1>
     Wasm Examples - C++
   </h1>
+  <button id="makeNewImgJS">js</button>
+  <button id="makeNewImgCPP">cpp</button>
   <img id="srcImg" src="./lenna.png" alt="Lenna Image">
   <br>
+  <h2>result image: </h2>
   <img id="newImgJS" src="" alt="New Image">
   <img id="newImgCPP" src="" alt="New Image">
+  <!-- <img id="newImgCPP" src="" alt="New Image"> -->
+  <script type="text/javascript">
+    var Module = {
+      onRuntimeInitialized: function() {
+        Module.test([0]);
+      }
+    };
+  </script>
   <script src="quick_example_scripts.js"></script>
+  <!-- <script type="module" src="script.js"></script> -->
   <script src="example.js"></script>
 </body>
 </html>
