@@ -7,16 +7,32 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>
-    Wasm Examples - C++
-  </h1>
-  <button id="makeNewImgJS">js</button>
-  <button id="makeNewImgCPP">cpp</button>
-  <img id="srcImg" src="./lenna.png" alt="Lenna Image">
-  <br>
-  <h2>result image: </h2>
-  <img id="newImgJS" src="" alt="New Image">
-  <img id="newImgCPP" src="" alt="New Image">
+  <!-- <button id="makeNewImgJS">js</button>
+    <button id="makeNewImgCPP">cpp</button> -->
+    <div class="header">
+    <span>
+      <h1>
+        WebAssembly Image Processing 
+      </h1>
+      <h2>
+        C++, Go and JavaScript implementations 
+      </h2>
+    </span>
+    <div class="header__img">
+      <img id="srcImg" src="./lenna.png" alt="Lenna Image">
+      <h2>Source Image</h2>
+    </div>
+  </div>
+  <div class="results">
+    <div class="results__js">
+      <h3>JavaScript Processing</h3>
+      <img id="newImgJS" src="" alt="New Image">
+    </div>
+    <div class="results__">
+      <h3>c++ Processing</h3>
+      <img id="newImgCPP" src="" alt="New Image">
+    </div>
+  </div>
   <!-- <img id="newImgCPP" src="" alt="New Image"> -->
   <script type="text/javascript">
     var Module = {
@@ -29,4 +45,35 @@
   <!-- <script type="module" src="script.js"></script> -->
   <script src="example.js"></script>
 </body>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(255, 243, 227);
+    box-shadow: 3px 2px 5px #dedede;
+    padding: 12px;
+  }
+  #srcImg {
+    width: 200px;
+    height: auto;
+  }
+
+  .results {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .results > div {
+    width: 33.333333%;
+    padding: 12px;
+  }
+  .results div > img {
+    width: 100%;
+  }
+</style>
 </html>
