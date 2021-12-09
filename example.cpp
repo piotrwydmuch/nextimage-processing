@@ -6,7 +6,7 @@ auto test(const emscripten::val &input) {
   auto data = emscripten::convertJSArrayToNumberVector<int>(input); // copies data
 
     int i;
-    for (i = 0; i < data.size() / 2; i += 4) {
+    for (i = 0; i < data.size(); i += 4) {
         int avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
         data[i]     = avg; // red
         data[i + 1] = avg; // green

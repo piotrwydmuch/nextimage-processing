@@ -1,13 +1,18 @@
+const btn_js = document.querySelector(".transform__js")
+const btn_cpp = document.querySelector(".transform__cpp")
+const newImgJS = document.querySelector("#newImgJS");
+const newImgCPP = document.querySelector("#newImgCPP");
+
+
 var Module = {
   onRuntimeInitialized: function () {
     //just sample test:
     // console.log(Module.test([120]));
-    
+
     function getPixelsFromImageUrl(url) {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
       let img = new Image();
-      let pixelsArr = [];
       img.setAttribute("crossOrigin", "anonymous");
       img.src = url;
       img.onload = function () {
@@ -15,25 +20,42 @@ var Module = {
         canvas.height = this.height;
         ctx.drawImage(this, 0, 0);
         let imageData = ctx.getImageData(0, 0, this.width, this.height);
-        pixelsArr = imageData.data;
+
+        btn_js.addEventListener("click", () => {
+          newImgJS.src = "";
+          makeNewImageJS(imageData);
+        })
+        btn_cpp.addEventListener("click", () => {
+          newImgCPP.src = "";
+          makeNewImageCPP(imageData);
+        })
+        
+        //first time run it automaticly
         makeNewImageJS(imageData);
         makeNewImageCPP(imageData);
       };
+
     }
+
     function makeNewImageJS(imageData) {
-      let newImg = document.getElementById("newImgJS");
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
       canvas.width = imageData.width;
       canvas.height = imageData.height;
       let data = [...imageData.data];
       
-      for (var i = 0; i < data.length / 1.3; i += 4) {
+      const t0 = performance.now();
+    
+      for (var i = 0; i < data.length; i += 4) {
         var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
         data[i] = avg; // red
         data[i + 1] = avg; // green
         data[i + 2] = avg; // blue
       }
+      
+      const t1 = performance.now();
+      console.log(`JS processing took ${t1 - t0} milliseconds.`);
+      
       ctx.putImageData(new ImageData(
         new Uint8ClampedArray(data),
         imageData.width,
@@ -41,18 +63,24 @@ var Module = {
       ),
       0,
       0);
-      newImg.src = canvas.toDataURL();
+      newImgJS.src = canvas.toDataURL();
     }
+
+
     function makeNewImageCPP(imageData) {
-      const newImg = document.getElementById("newImgCPP");
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       canvas.width = imageData.width;
       canvas.height = imageData.height;
       let data = imageData.data;
 
+      const t0 = performance.now();
+      
       // WASM magic is here 
       newData = Module.test(data);
+
+      const t1 = performance.now();
+      console.log(`C++ processing took ${t1 - t0} milliseconds.`);
 
       ctx.putImageData(
         new ImageData(
@@ -63,8 +91,7 @@ var Module = {
         0,
         0
       );
-      // image.src = 
-      newImg.src = canvas.toDataURL();
+      newImgCPP.src = canvas.toDataURL();
     }
     getPixelsFromImageUrl("./lenna.png");
   },

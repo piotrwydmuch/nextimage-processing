@@ -26,10 +26,12 @@
   <div class="results">
     <div class="results__js">
       <h3>JavaScript Processing</h3>
+      <button class="transform__js">transform</button>
       <img id="newImgJS" src="" alt="New Image">
     </div>
     <div class="results__">
       <h3>c++ Processing</h3>
+      <button class="transform__cpp">transform</button>
       <img id="newImgCPP" src="" alt="New Image">
     </div>
   </div>
@@ -37,7 +39,7 @@
   <script type="text/javascript">
     var Module = {
       onRuntimeInitialized: function() {
-        Module.test([0]);
+        //Module.test([0]);
       }
     };
   </script>
@@ -50,6 +52,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
   }
   .header {
     display: flex;
@@ -63,7 +66,7 @@
     width: 200px;
     height: auto;
   }
-
+  
   .results {
     display: flex;
     flex-wrap: wrap;
@@ -71,9 +74,27 @@
   .results > div {
     width: 33.333333%;
     padding: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  .results div h3 {
+    margin-bottom: 8px;
   }
   .results div > img {
+    margin-top: 8px;
     width: 100%;
+    min-height: 200px;
+  }
+  .results div > button {
+    border-radius: 4px;
+    background-color: rgb(255, 223, 181);
+    box-shadow: 3px 2px 5px #dedede;
+    border: none;
+    padding: 8px 12px;
+  }
+  .results div > button:hover {
+    background-color: rgb(255, 187, 103);
+    cursor: pointer;
   }
 </style>
 </html>
