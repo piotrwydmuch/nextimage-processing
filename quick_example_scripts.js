@@ -1,7 +1,9 @@
 const btn_js = document.querySelector(".transform__js")
 const btn_cpp = document.querySelector(".transform__cpp")
+const btn_go = document.querySelector(".transform__go")
 const newImgJS = document.querySelector("#newImgJS");
 const newImgCPP = document.querySelector("#newImgCPP");
+const newImgGO = document.querySelector("#newImgGO");
 const infoDetails = document.querySelector(".info__details")
 
 var Module = {
@@ -28,6 +30,11 @@ var Module = {
         btn_cpp.addEventListener("click", () => {
           newImgCPP.src = "";
           makeNewImageCPP(imageData);
+        })
+
+        btn_go.addEventListener("click", () => {
+          // newImgCPP.src = "";
+          makeNewImageGo(imageData);
         })
         
         //first time run it automaticly
@@ -66,6 +73,35 @@ var Module = {
       0,
       0);
       newImgJS.src = canvas.toDataURL();
+    }
+
+    function makeNewImageGo(imageData) {
+      let canvas = document.createElement("canvas");
+      let ctx = canvas.getContext("2d");
+      canvas.width = imageData.width;
+      canvas.height = imageData.height;
+      let data = [...imageData.data];
+      
+      const t0 = performance.now();
+      
+      // WASM magic is here 
+      console.log(add(data))
+
+      const t1 = performance.now();
+      let info = `GO processing took ${t1 - t0} milliseconds.`
+      console.info(info)
+      infoDetails.textContent = info
+
+      // ctx.putImageData(
+      //   new ImageData(
+      //     new Uint8ClampedArray(newData),
+      //     imageData.width,
+      //     imageData.height
+      //   ),
+      //   0,
+      //   0
+      // );
+      // newImgGO.src = canvas.toDataURL();
     }
 
 

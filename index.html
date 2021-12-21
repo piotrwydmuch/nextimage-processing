@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script src="wasm_exec.js"></script>
 </head>
 <body>
     <div class="header">
@@ -27,21 +28,37 @@
       <button class="transform__js">transform</button>
       <img id="newImgJS" src="" alt="New Image">
     </div>
-    <div class="results__">
+    <div class="results__cpp">
       <h3>c++ Processing</h3>
       <button class="transform__cpp">transform</button>
       <img id="newImgCPP" src="" alt="New Image">
+    </div>
+    <div class="results__go">
+      <h3>Go Lang Processing</h3>
+      <button class="transform__go">transform</button>
+      <img id="newImgGO" src="" alt="New Image">
     </div>
   </div>
   <div class="info">
     <p class="info__details"></p>
   </div>
   <script type="text/javascript">
+    //load c++ wasm module:
     var Module = {
       onRuntimeInitialized: function() {
         //Module.test([0]);
       }
     };
+
+    //load Go wasm module:
+    const go = new Go();
+    let mod, inst;
+    let imageType;
+    WebAssembly.instantiateStreaming(fetch("processing.wasm"), go.importObject).then((result) => {
+        go.run(result.instance);
+    }).catch((err) => {
+        console.error(err);
+    });
   </script>
   <script src="quick_example_scripts.js"></script>
   <script src="example.js"></script>
