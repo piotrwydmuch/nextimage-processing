@@ -33,13 +33,14 @@ var Module = {
         })
 
         btn_go.addEventListener("click", () => {
-          // newImgCPP.src = "";
+          newImgGO.src = "";
           makeNewImageGo(imageData);
         })
         
         //first time run it automaticly
         makeNewImageJS(imageData);
         makeNewImageCPP(imageData);
+        makeNewImageGO(imageData); // fix me
       };
 
     }
@@ -86,25 +87,26 @@ var Module = {
       
       // WASM magic is here 
       const new_Uint8Array = new Uint8Array(data);
-      console.log(add(new_Uint8Array))
+      newDataLength = add(new_Uint8Array)
+      newData = new Uint8Array(newDataLength)
+			SetUint8ArrayInGo(newData)
 
       const t1 = performance.now();
       let info = `GO processing took ${t1 - t0} milliseconds.`
       console.info(info)
       infoDetails.textContent = info
 
-      // ctx.putImageData(
-      //   new ImageData(
-      //     new Uint8ClampedArray(newData),
-      //     imageData.width,
-      //     imageData.height
-      //   ),
-      //   0,
-      //   0
-      // );
-      // newImgGO.src = canvas.toDataURL();
+      ctx.putImageData(
+        new ImageData(
+          new Uint8ClampedArray(newData),
+          imageData.width,
+          imageData.height
+        ),
+        0,
+        0
+      );
+      newImgGO.src = canvas.toDataURL();
     }
-
 
     function makeNewImageCPP(imageData) {
       const canvas = document.createElement("canvas");
