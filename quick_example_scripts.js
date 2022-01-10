@@ -85,7 +85,8 @@ var Module = {
       const t0 = performance.now();
       
       // WASM magic is here 
-      console.log(add(data))
+      const new_Uint8Array = new Uint8Array(data);
+      console.log(add(new_Uint8Array))
 
       const t1 = performance.now();
       let info = `GO processing took ${t1 - t0} milliseconds.`

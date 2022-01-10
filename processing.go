@@ -2,24 +2,32 @@ package main
 
 import (
 	"fmt"
-	"reflect"
 	"syscall/js"
 )
-func add(this js.Value, inputs[]js.Value) interface{} {
+func add(this js.Value, args []js.Value) interface{} {
 
-	data := inputs[0];
+	// data := inputs[0];
 
-	//length := len(data)
+	received := make([]byte, args[0].Get("length").Int())
+	_ = js.CopyBytesToGo(received, args[0])
+	// fmt.Println(received)
+	
+	length := len(received)	
+	for i := 0; i < length; i+= 4 {
+		avg := (received[i] + received[i + 1] + received[i + 2]) / 3;
+		received[i]     = avg; // red
+		received[i + 1] = avg; // green
+		received[i + 2] = avg; // blue
+	}
+	
+	fmt.Println(received)
+	
 
-	// for i := 0; i < length; i+= 4 {
-	// 	avg := (data[i] + data[i + 1] + data[i + 2]) / 3;
-	// 	data[i]     = avg; // red
-	// 	data[i + 1] = avg; // green
-	// 	data[i + 2] = avg; // blue
-	// }
-
-	fmt.Println(reflect.TypeOf(data))
-	return data
+	return nil
+		
+	// fmt.Println(reflect.TypeOf(data))
+	// fmt.Println(reflect.TypeOf(n))
+	// return n
 }
 
 func main() {
