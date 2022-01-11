@@ -64,7 +64,10 @@ var Module = {
       const t1 = performance.now();
       let info = `JS processing took ${t1 - t0} milliseconds.`
       console.info(info)
-      infoDetails.textContent = info
+
+      //UI console
+      addInfoToConsole(info)
+      renderConsole()
       
       ctx.putImageData(new ImageData(
         new Uint8ClampedArray(data),
@@ -94,7 +97,10 @@ var Module = {
       const t1 = performance.now();
       let info = `GO processing took ${t1 - t0} milliseconds.`
       console.info(info)
-      infoDetails.textContent = info
+      
+      //UI console
+      addInfoToConsole(info)
+      renderConsole()
 
       ctx.putImageData(
         new ImageData(
@@ -123,7 +129,10 @@ var Module = {
       const t1 = performance.now();
       let info = `C++ processing took ${t1 - t0} milliseconds.`
       console.info(info)
-      infoDetails.textContent = info
+     
+      //UI console
+      addInfoToConsole(info)
+      renderConsole()
 
       ctx.putImageData(
         new ImageData(
@@ -136,6 +145,27 @@ var Module = {
       );
       newImgCPP.src = canvas.toDataURL();
     }
+
+    let messages = [];
+    function addInfoToConsole(msg) {
+      if (messages.length < 4) {
+        messages.push(msg);
+      } else if (messages.length == 4) {
+        messages.shift();
+        messages.push(msg);
+      }
+      console.log(messages);
+    }
+
+    function renderConsole() {
+      infoDetails.innerHTML = '';
+      messages.forEach((msg) => {
+        let entry = document.createElement('li');
+        entry.appendChild(document.createTextNode(msg))
+        infoDetails.appendChild(entry);
+      })
+    }
+
     getPixelsFromImageUrl("./lenna.png");
   },
 };

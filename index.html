@@ -4,8 +4,12 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet">
   <title>Document</title>
   <script src="wasm_exec.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header">
@@ -40,7 +44,9 @@
     </div>
   </div>
   <div class="info">
-    <p class="info__details"></p>
+    <ul class="info__details">
+      <li>use the button to view results</li>
+    </ul>
   </div>
   <script type="text/javascript">
     //load c++ wasm module:
@@ -63,60 +69,4 @@
   <script src="quick_example_scripts.js"></script>
   <script src="example.js"></script>
 </body>
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-  }
-  .header {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: rgb(255, 243, 227);
-    box-shadow: 3px 2px 5px #dedede;
-    padding: 12px;
-  }
-  #srcImg {
-    width: 200px;
-    height: auto;
-  }
-  
-  .results {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .results > div {
-    width: 33.333333%;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-  }
-  .results div h3 {
-    margin-bottom: 8px;
-  }
-  .results div > img {
-    margin-top: 8px;
-    width: 100%;
-    min-height: 200px;
-  }
-  .results div > button {
-    border-radius: 4px;
-    background-color: rgb(255, 223, 181);
-    box-shadow: 3px 2px 5px #dedede;
-    border: none;
-    padding: 8px 12px;
-  }
-  .results div > button:hover {
-    background-color: rgb(255, 187, 103);
-    cursor: pointer;
-  }
-  .info__details {
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-left: 12px;
-    font-size: 18px;
-    color: rgb(65, 65, 255);
-  }
-</style>
 </html>
