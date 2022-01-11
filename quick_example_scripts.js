@@ -1,3 +1,4 @@
+let sourceImg = document.getElementById("srcImg");
 const btn_js = document.querySelector(".transform__js")
 const btn_cpp = document.querySelector(".transform__cpp")
 const btn_go = document.querySelector(".transform__go")
@@ -5,6 +6,9 @@ const newImgJS = document.querySelector("#newImgJS");
 const newImgCPP = document.querySelector("#newImgCPP");
 const newImgGO = document.querySelector("#newImgGO");
 const infoDetails = document.querySelector(".info__details")
+const optionImage = document.querySelectorAll(".option-img")
+
+let globalImageData;
 
 var Module = {
   onRuntimeInitialized: function () {
@@ -21,22 +25,8 @@ var Module = {
         canvas.width = this.width;
         canvas.height = this.height;
         ctx.drawImage(this, 0, 0);
-        let imageData = ctx.getImageData(0, 0, this.width, this.height);
-
-        btn_js.addEventListener("click", () => {
-          newImgJS.src = "";
-          makeNewImageJS(imageData);
-        })
-        btn_cpp.addEventListener("click", () => {
-          newImgCPP.src = "";
-          makeNewImageCPP(imageData);
-        })
-
-        btn_go.addEventListener("click", () => {
-          newImgGO.src = "";
-          makeNewImageGo(imageData);
-        })
-        
+        globalImageData = ctx.getImageData(0, 0, this.width, this.height);
+      
         //first time run it automaticly
         // makeNewImageJS(imageData);
         // makeNewImageCPP(imageData);
@@ -150,11 +140,10 @@ var Module = {
     function addInfoToConsole(msg) {
       if (messages.length < 4) {
         messages.push(msg);
-      } else if (messages.length == 4) {
+      } else {
         messages.shift();
         messages.push(msg);
       }
-      console.log(messages);
     }
 
     function renderConsole() {
@@ -166,6 +155,45 @@ var Module = {
       })
     }
 
-    getPixelsFromImageUrl("./lenna.png");
+    optionImage.forEach((option) => {
+      option.addEventListener("click", (e) => {
+        const imgTarget = e.currentTarget.children[0];
+        setSourceImage(imgTarget);
+      })
+    })
+    
+    // collecting event options in non-annonymus function
+    // now its possible to remove event listeners when changing src img
+    const jsEventOptions = () => {
+      newImgJS.src = "";
+      makeNewImageJS(globalImageData);
+    }
+    const cppEventOptions = () => {
+      newImgCPP.src = "";
+      makeNewImageCPP(globalImageData);
+    }
+    const goEventOptions = () => {
+      newImgGO.src = "";
+      makeNewImageGo(globalImageData);
+    }
+
+    function setSourceImage(target) {
+      console.log(target)
+      sourceImg.src = target.src;
+      getPixelsFromImageUrl(sourceImg.src);
+
+      // hax:
+      // idk how to check is there any event
+      // so delete it everytime :(
+      btn_js.removeEventListener("click", jsEventOptions)
+      btn_cpp.removeEventListener("click", cppEventOptions)
+      btn_go.removeEventListener("click", goEventOptions)
+      // now add new events with new data
+      btn_js.addEventListener("click", jsEventOptions)
+      btn_cpp.addEventListener("click", cppEventOptions)
+      btn_go.addEventListener("click", goEventOptions)
+    }
+
+    getPixelsFromImageUrl(sourceImg.src);
   },
 };
