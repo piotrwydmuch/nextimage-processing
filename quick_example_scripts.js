@@ -7,6 +7,7 @@ const newImgCPP = document.querySelector("#newImgCPP");
 const newImgGO = document.querySelector("#newImgGO");
 const infoDetails = document.querySelector(".info__details")
 const optionImage = document.querySelectorAll(".option-img")
+const optionImageList = document.querySelector(".header__img-change_ul")
 
 let globalImageData;
 
@@ -138,7 +139,7 @@ var Module = {
 
     let messages = [];
     function addInfoToConsole(msg) {
-      if (messages.length < 4) {
+      if (messages.length < 6) {
         messages.push(msg);
       } else {
         messages.shift();
@@ -157,8 +158,8 @@ var Module = {
 
     optionImage.forEach((option) => {
       option.addEventListener("click", (e) => {
-        const imgTarget = e.currentTarget.children[0];
-        setSourceImage(imgTarget);
+        const target = e.currentTarget;
+        setSourceImage(target);
       })
     })
     
@@ -177,21 +178,32 @@ var Module = {
       makeNewImageGo(globalImageData);
     }
 
-    function setSourceImage(target) {
-      console.log(target)
-      sourceImg.src = target.src;
-      getPixelsFromImageUrl(sourceImg.src);
-
+    const eventsHandler = () => {
       // hax:
       // idk how to check is there any event
       // so delete it everytime :(
-      btn_js.removeEventListener("click", jsEventOptions)
-      btn_cpp.removeEventListener("click", cppEventOptions)
-      btn_go.removeEventListener("click", goEventOptions)
-      // now add new events with new data
-      btn_js.addEventListener("click", jsEventOptions)
-      btn_cpp.addEventListener("click", cppEventOptions)
-      btn_go.addEventListener("click", goEventOptions)
+        btn_js.removeEventListener("click", jsEventOptions)
+        btn_cpp.removeEventListener("click", cppEventOptions)
+        btn_go.removeEventListener("click", goEventOptions)
+        // now add new events with new data
+        btn_js.addEventListener("click", jsEventOptions)
+        btn_cpp.addEventListener("click", cppEventOptions)
+        btn_go.addEventListener("click", goEventOptions)
+    }
+
+    function setSourceImage(target) {
+      sourceImg.src = target.children[0].src;
+      sourceImg.alt = target.children[0].alt;
+
+      Array.from(optionImageList.children).forEach((el) => {
+        el.classList.remove("active");
+      })
+      target.classList.add("active");
+      
+      getPixelsFromImageUrl(sourceImg.src);
+      eventsHandler();
+      addInfoToConsole(`New image selected - ${sourceImg.alt}`);
+      renderConsole();
     }
 
     getPixelsFromImageUrl(sourceImg.src);

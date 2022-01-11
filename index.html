@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="header">
-    <span>
+    <span class="header__title">
       <h1>
         WebAssembly Image Processing 
       </h1>
@@ -22,18 +22,19 @@
       </h2>
     </span>
     <div class="header__img">
-      <img id="srcImg" src="" alt="Selected Image">
       <h2>Source Image</h2>
+      <img id="srcImg" src="" alt="Selected Image">
     </div>
     <div class="header__img-change">
+      <h3>Select image to process:</h3>
       <ul class="header__img-change_ul">
-        <li id="img-1" class="option-img active">
+        <li id="img-1" class="option-img">
           <img  src="./lenna.png" alt="Lenna Image">
-          <p>opis obrazka</p>
+          <p>512px / 512px, 463 KB</p>
         </li>
         <li id="img-2" class="option-img">
           <img src="./alfa.jpg" alt="Car Image">
-          <p>opis obrazka</p>
+          <p>1600px / 1200px, 292 KB</p>
         </li>
       </ul>
     </div>
@@ -41,17 +42,17 @@
   <div class="results">
     <div class="results__js">
       <h3>JavaScript Processing</h3>
-      <button class="transform__js">transform</button>
+      <button class="transform__js">Transform &#8594;</button>
       <img id="newImgJS" src="" alt="New Image">
     </div>
     <div class="results__cpp">
       <h3>c++ Processing</h3>
-      <button class="transform__cpp">transform</button>
+      <button class="transform__cpp">Transform &#8594;</button>
       <img id="newImgCPP" src="" alt="New Image">
     </div>
     <div class="results__go">
       <h3>Go Lang Processing</h3>
-      <button class="transform__go">transform</button>
+      <button class="transform__go">Transform &#8594;</button>
       <img id="newImgGO" src="" alt="New Image">
     </div>
   </div>
