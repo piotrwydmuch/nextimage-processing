@@ -38,9 +38,9 @@ var Module = {
         })
         
         //first time run it automaticly
-        makeNewImageJS(imageData);
-        makeNewImageCPP(imageData);
-        makeNewImageGO(imageData); // fix me
+        // makeNewImageJS(imageData);
+        // makeNewImageCPP(imageData);
+        // makeNewImageGO(imageData); // fix me
       };
 
     }

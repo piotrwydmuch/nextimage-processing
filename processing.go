@@ -15,10 +15,11 @@ func add(this js.Value, args []js.Value) interface{} {
 		
 	length := len(received)	
 	for i := 0; i < length; i+=4 {
-		avg := (received[i] + received[i + 1] + received[i + 2]) / 3;
-		received[i]     = avg; // red
-		received[i + 1] = avg; // green
-		received[i + 2] = avg; // blue
+		var avg uint16 = 0;
+		avg = (uint16(received[i]) + uint16(received[i + 1]) + uint16(received[i + 2])) / 3;
+		received[i]     = byte(avg); // red
+		received[i + 1] = byte(avg); // green
+		received[i + 2] = byte(avg); // blue
 	}
 
 	//assign new byte array to global variable
