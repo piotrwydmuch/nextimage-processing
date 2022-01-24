@@ -71,23 +71,23 @@
   </div>
   <script type="text/javascript">
     //load c++ wasm module:
-    var Module = {
-      onRuntimeInitialized: function() {
-        //Module.test([0]);
-      }
-    };
+    // var Module = {
+    //   onRuntimeInitialized: function() {
+    //     //Module.test([0]);
+    //   }
+    // };
 
     //load Go wasm module:
     const go = new Go();
     let mod, inst;
     let imageType;
-    WebAssembly.instantiateStreaming(fetch("processing.wasm"), go.importObject).then((result) => {
+    WebAssembly.instantiateStreaming(fetch("go_processing.wasm"), go.importObject).then((result) => {
         go.run(result.instance);
     }).catch((err) => {
         console.error(err);
     });
   </script>
-  <script src="quick_example_scripts.js"></script>
-  <script src="example.js"></script>
+  <script src="scripts.js"></script>
+  <script src="cpp_processing.js"></script>
 </body>
 </html>
