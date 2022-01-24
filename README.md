@@ -12,6 +12,14 @@ https://emscripten.org/docs/getting_started/downloads.html#sdk-download-and-inst
 
 ## development (c++)
 
+-  żeby korzystać z komend emsdk
+
+$ source ./emsdk_env.sh
+
+-  można sprawdzić czy wszystko działa
+
+$ emcc --version
+
 - zbudowanie modułu wasm (w miejsce `example` podajemy kolejno nazwe pliku wyjściowego oraz wejsciowego):
 
 ```emcc --bind -o example.js example.cpp```
