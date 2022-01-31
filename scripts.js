@@ -13,8 +13,6 @@ let globalImageData;
 
 var Module = {
   onRuntimeInitialized: function () {
-    //just sample test:
-    // console.log(Module.test([120]));
 
     function getPixelsFromImageUrl(url) {
       let canvas = document.createElement("canvas");
@@ -115,7 +113,7 @@ var Module = {
       const t0 = performance.now();
       
       // WASM magic is here 
-      newData = Module.test(data);
+      newData = Module.processImage(data);
 
       const t1 = performance.now();
       let info = `C++ processing took ${t1 - t0} milliseconds.`

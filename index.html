@@ -81,7 +81,7 @@
     const go = new Go();
     let mod, inst;
     let imageType;
-    WebAssembly.instantiateStreaming(fetch("go_processing.wasm"), go.importObject).then((result) => {
+    WebAssembly.instantiateStreaming(fetch("processing.wasm"), go.importObject).then((result) => {
         go.run(result.instance);
     }).catch((err) => {
         console.error(err);

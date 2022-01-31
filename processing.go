@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"syscall/js"
+	"time"
 )
 
 var myslice []uint8
@@ -12,6 +13,9 @@ func add(this js.Value, args []js.Value) interface{} {
 	received := make([]byte, args[0].Get("length").Int())
 	_ = js.CopyBytesToGo(received, args[0])
 	// fmt.Println(received)
+
+	// Measuring execution time 
+	start := time.Now()
 		
 	length := len(received)	
 	for i := 0; i < length; i+=4 {
@@ -21,6 +25,9 @@ func add(this js.Value, args []js.Value) interface{} {
 		received[i + 1] = byte(avg); // green
 		received[i + 2] = byte(avg); // blue
 	}
+
+	// print measured time 
+	fmt.Println("t: ", time.Since(start))
 
 	//assign new byte array to global variable
 	myslice = received

@@ -1,9 +1,14 @@
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
 #include <iostream>
+#include <chrono>  // for high_resolution_clock
 
-auto test(const emscripten::val &input) {
+auto processImage(const emscripten::val &input) {
   auto data = emscripten::convertJSArrayToNumberVector<int>(input); // copies data
+
+    // Record start time
+    auto start_time = std::chrono::high_resolution_clock::now();
+
 
     int i;
     for (i = 0; i < data.size(); i += 4) {
@@ -12,6 +17,13 @@ auto test(const emscripten::val &input) {
         data[i + 1] = avg; // green
         data[i + 2] = avg; // blue
     }
+
+  // Record end time
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto time = end_time - start_time;
+
+  std::cout << "took " <<
+    time/std::chrono::milliseconds(1) << "ms to run.\n";
 
   // make a typed array view of the output
   emscripten::val view{ emscripten::typed_memory_view(data.size(), data.data()) };
@@ -24,5 +36,5 @@ auto test(const emscripten::val &input) {
 }
 
 EMSCRIPTEN_BINDINGS(my_module) {
-  emscripten::function("test", &test);
+  emscripten::function("processImage", &processImage);
 }
