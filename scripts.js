@@ -8,6 +8,10 @@ const newImgGO = document.querySelector("#newImgGO");
 const infoDetails = document.querySelector(".info__details")
 const optionImage = document.querySelectorAll(".option-img")
 const optionImageList = document.querySelector(".header__img-change_ul")
+const btn_js_bulk = document.querySelector(".transform__js__bulk");
+const btn_cpp_bulk = document.querySelector(".transform__cpp__bulk");
+const btn_go_bulk = document.querySelector(".transform__go__bulk");
+
 
 let globalImageData;
 
@@ -66,6 +70,8 @@ var Module = {
       0,
       0);
       newImgJS.src = canvas.toDataURL();
+
+      return t1 - t0;
     }
 
     function makeNewImageGo(imageData) {
@@ -101,6 +107,8 @@ var Module = {
         0
       );
       newImgGO.src = canvas.toDataURL();
+
+      return t1 - t0;
     }
 
     function makeNewImageCPP(imageData) {
@@ -133,6 +141,8 @@ var Module = {
         0
       );
       newImgCPP.src = canvas.toDataURL();
+
+      return t1 - t0;
     }
 
     let messages = [];
@@ -165,15 +175,44 @@ var Module = {
     // now its possible to remove event listeners when changing src img
     const jsEventOptions = () => {
       newImgJS.src = "";
-      makeNewImageJS(globalImageData);
+      return makeNewImageJS(globalImageData);
     }
     const cppEventOptions = () => {
       newImgCPP.src = "";
-      makeNewImageCPP(globalImageData);
+      return makeNewImageCPP(globalImageData);
     }
     const goEventOptions = () => {
       newImgGO.src = "";
-      makeNewImageGo(globalImageData);
+      return makeNewImageGo(globalImageData);
+    }
+
+    const bulkTesting = (func) => {
+      async function run() {
+        resultArray = [];
+        for (let i = 1; i < 11; i++) {
+          await resultArray.push(func());
+        }
+        console.log("Done!");
+        console.log(resultArray);
+        // sendDataToBackend(resultArray)
+      }
+      run();
+    }
+
+    const sendDataToBackend = (array) => {
+      fetch("http://localhost:5000/save_data", {
+        method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          times: array,
+          run_name: "run_xxx",
+        }),
+      }).then((r) => {
+        console.log(r);
+      });
     }
 
     const eventsHandler = () => {
@@ -187,6 +226,17 @@ var Module = {
         btn_js.addEventListener("click", jsEventOptions)
         btn_cpp.addEventListener("click", cppEventOptions)
         btn_go.addEventListener("click", goEventOptions)
+
+        //bulk testing
+        btn_js_bulk.addEventListener("click", () => {
+          bulkTesting(jsEventOptions)
+        })
+        btn_cpp_bulk.addEventListener("click", () => {
+          bulkTesting(cppEventOptions)
+        })
+        btn_go_bulk.addEventListener("click", () => {
+          bulkTesting(goEventOptions)
+        })
     }
 
     function setSourceImage(target) {
