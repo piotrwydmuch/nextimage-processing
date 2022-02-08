@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="dupa">dupa</button>
+    <script>
+        let element =  document.querySelector('#dupa');
+        element.addEventListener('click', () => {
+            fetch("http://localhost:5000/save_data", {
+                method: 'POST',
+                mode: 'cors', // no-cors, *cors, same-origin
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "times": [
+                        0.2137,
+                        0.1234567,
+                        0.21179972096749589,
+                        0.8519211655053358,
+                        0.49975562567739984,
+                        0.42983288194254043,
+                        0.7118760745063777,
+                        0.7449203477397304,
+                    ],
+                    "run_name": "run_xxx"
+                })
+            }).then((r) => {
+                console.log(r)
+            })
+        })
+    </script>
+</body>
+</html>
