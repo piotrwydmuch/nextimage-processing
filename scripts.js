@@ -203,7 +203,7 @@ var Module = {
         }
         console.log("Done!");
         console.log(resultArray);
-        // sendDataToBackend(resultArray)
+        sendDataToBackend(resultArray)
       }
       run();
     }
