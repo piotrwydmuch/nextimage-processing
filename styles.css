@@ -75,18 +75,27 @@ body {
 }
 .results div > button {
   border-radius: 4px;
-  background-color: rgb(255, 223, 181);
   box-shadow: 3px 2px 5px #dedede;
   border: none;
   padding: 8px 12px;
 }
-.results div > button:hover {
+.results div .testing {
+  background-color: rgb(255, 223, 181);
+}
+.results div .bulk-testing {
+  margin-top: 4px;
+  background: rgb(95, 84, 70);
+  color: #fff;
+}
+.results div .testing:hover,
+.results div .bulk-testing:hover {
   background-color: rgb(255, 187, 103);
   cursor: pointer;
 }
 .info__details {
   color: rgb(65, 65, 255);
 }
+
 
 /* UI console */
 .info {
