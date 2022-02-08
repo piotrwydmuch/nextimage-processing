@@ -185,6 +185,15 @@ var Module = {
       newImgGO.src = "";
       return makeNewImageGo(globalImageData);
     }
+    const bulktestingJs = () => {
+      bulkTesting(jsEventOptions)
+    }
+    const bulktestingCpp = () => {
+      bulkTesting(cppEventOptions)
+    }
+    const bulktestingGo = () => {
+      bulkTesting(goEventOptions)
+    }
 
     const bulkTesting = (func) => {
       async function run() {
@@ -216,27 +225,25 @@ var Module = {
     }
 
     const eventsHandler = () => {
-      // hax:
+      // HAX ALERT:
       // idk how to check is there any event
       // so delete it everytime :(
-        btn_js.removeEventListener("click", jsEventOptions)
-        btn_cpp.removeEventListener("click", cppEventOptions)
-        btn_go.removeEventListener("click", goEventOptions)
-        // now add new events with new data
-        btn_js.addEventListener("click", jsEventOptions)
-        btn_cpp.addEventListener("click", cppEventOptions)
-        btn_go.addEventListener("click", goEventOptions)
+      btn_js.removeEventListener("click", jsEventOptions)
+      btn_cpp.removeEventListener("click", cppEventOptions)
+      btn_go.removeEventListener("click", goEventOptions)
+      // now add new events with new data
+      btn_js.addEventListener("click", jsEventOptions)
+      btn_cpp.addEventListener("click", cppEventOptions)
+      btn_go.addEventListener("click", goEventOptions)
 
-        //bulk testing
-        btn_js_bulk.addEventListener("click", () => {
-          bulkTesting(jsEventOptions)
-        })
-        btn_cpp_bulk.addEventListener("click", () => {
-          bulkTesting(cppEventOptions)
-        })
-        btn_go_bulk.addEventListener("click", () => {
-          bulkTesting(goEventOptions)
-        })
+      //bulk testing (same hax like above)
+      btn_js_bulk.removeEventListener("click", bulktestingJs)
+      btn_cpp_bulk.removeEventListener("click", bulktestingCpp)
+      btn_go_bulk.removeEventListener("click", bulktestingGo)
+
+      btn_js_bulk.addEventListener("click", bulktestingJs)
+      btn_cpp_bulk.addEventListener("click", bulktestingCpp)
+      btn_go_bulk.addEventListener("click", bulktestingGo)
     }
 
     function setSourceImage(target) {
