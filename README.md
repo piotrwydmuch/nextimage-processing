@@ -1,6 +1,14 @@
 # nextimage-processing
 
-## start
+## uruchamianie
+
+- potrzebujemy serwera http:
+
+```python3 -m http.server```
+
+następnie wchodzimy pod adres `http://localhost:8000/`
+
+## development (ogólnie)
 
 - przed startem potrzebne jest dodanie do projektu biblioteki emscripten
 
@@ -28,14 +36,16 @@ $ emcc --version
 
 ```emcc --bind -o cpp_processing.js processing.cpp -s ALLOW_MEMORY_GROWTH=1```
 
+- algorytmy przetwarzania obrazów znajdują się w pliku `./processing.cpp`
+
 ## development (go lang)
 
 - plik `processing.go` traktujemy następującą komendą
 
 ```GOOS=js GOARCH=wasm go build -o processing.wasm```
 
-## testowanie
+- algorytmy przetwarzania obrazów znajdują się w pliku `./processing.go`
 
-- potrzebujemy serwera http:
+## development (js)
 
-```python3 -m http.server```
+- algorytmy przetwarzania obrazów znajdują się w pliku `./scripts.js`
