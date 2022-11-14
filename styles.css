@@ -7,18 +7,19 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 .header {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: baseline;
   background-color: rgb(255, 243, 227);
   box-shadow: 3px 2px 5px #dedede;
   padding: 12px;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
-.header__title {
+.title {
   align-self: center;
+  margin: 10px 0;
 }
 #srcImg {
   width: 200px;
@@ -36,6 +37,8 @@ body {
 .header__img-change_ul {
   list-style: none;
   margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
 }
 .header__img-change_ul li {
   display: flex;
@@ -44,6 +47,7 @@ body {
   margin: 0;
   padding: 8px;
   gap: 4px;
+  width: 270px;
 }
 .header__img-change_ul li.active {
   background-color: rgb(255, 223, 181);
@@ -57,10 +61,12 @@ body {
 .results {
   font-family:Verdana, Geneva, Tahoma, sans-serif;
   display: flex;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 .results > div {
-  width: 25%;
+  width: 33%;
+  min-width: 290px;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -92,10 +98,13 @@ body {
   background-color: rgb(255, 187, 103);
   cursor: pointer;
 }
+.results div .bulk-testing:hover {
+  background-color: rgb(184, 164, 139);
+
+}
 .info__details {
   color: rgb(65, 65, 255);
 }
-
 
 /* UI console */
 .info {

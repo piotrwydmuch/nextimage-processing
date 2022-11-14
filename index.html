@@ -1,96 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet">
-  <title>Document</title>
-  <script src="wasm_exec.js"></script>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="header">
-    <span class="header__title">
-      <h1>
-        WebAssembly Image Processing 
-      </h1>
-      <h2>
-        C++, Go and JavaScript implementations 
-      </h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+    <script src="wasm_exec.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <span class="title">
+      <h1>WebAssembly Image Processing</h1>
+      <h2>C++, Go and JavaScript implementations</h2>
     </span>
-    <div class="header__img">
-      <h2>Source Image</h2>
-      <img id="srcImg" src="" alt="Selected Image">
+    <div class="header">
+      <div class="header__img-change">
+        <h3>Select image to process:</h3>
+        <ul class="header__img-change_ul">
+          <li id="img-1" class="option-img">
+            <img src="./imgs/lenna.png" alt="Lenna Image" />
+            <p>512px / 512px<br>463 KB</p>
+          </li>
+          <li id="img-2" class="option-img">
+            <img src="./imgs/alfa.jpg" alt="Car Image" />
+            <p>1600px / 1200px<br>292 KB</p>
+          </li>
+          <li id="img-3" class="option-img">
+            <img src="./imgs/zelki.jpeg" alt="Candies" />
+            <p>2560px / 1600px<br>544 KB</p>
+          </li>
+          <li id="img-4" class="option-img">
+            <img src="./imgs/space.jpg" alt="Space" />
+            <p>5302px / 3805px<br>3000 KB</p>
+          </li>
+        </ul>
+      </div>
+      <div class="header__img">
+        <h2>Source Image</h2>
+        <img id="srcImg" src="" alt="Selected Image" />
+      </div>
     </div>
-    <div class="header__img-change">
-      <h3>Select image to process:</h3>
-      <ul class="header__img-change_ul">
-        <li id="img-1" class="option-img">
-          <img  src="./imgs/lenna.png" alt="Lenna Image">
-          <p>512px / 512px, 463 KB</p>
-        </li>
-        <li id="img-2" class="option-img">
-          <img src="./imgs/alfa.jpg" alt="Car Image">
-          <p>1600px / 1200px, 292 KB</p>
-        </li>
-        <li id="img-3" class="option-img">
-          <img src="./imgs/zelki.jpeg" alt="Candies">
-          <p>2560px / 1600px, 544 KB</p>
-        </li>
-        <li id="img-4" class="option-img">
-          <img src="./imgs/space.jpg" alt="Space">
-          <p>5302px / 3805px, 3000 KB</p>
-        </li>
+    <div class="results">
+      <div class="results__js">
+        <h3>JavaScript Processing</h3>
+        <div class="buttons-container">
+          <button class="transform__js testing">Transform once &#8594;</button>
+          <button class="transform__js__bulk bulk-testing">
+            Transform 10x &#8594;
+          </button>
+        </div>
+        <img id="newImgJS" src="" alt="New Image" />
+      </div>
+      <div class="results__cpp">
+        <h3>c++ Processing</h3>
+        <div class="buttons-container">
+          <button class="transform__cpp testing">Transform once &#8594;</button>
+          <button class="transform__cpp__bulk bulk-testing">
+            Transform 10x &#8594;
+          </button>
+        </div>
+        <img id="newImgCPP" src="" alt="New Image" />
+      </div>
+      <div class="results__go">
+        <h3>Go Lang Processing</h3>
+        <div class="buttons-container">
+          <button class="transform__go testing">Transform once &#8594;</button>
+          <button class="transform__go__bulk bulk-testing">
+            Transform 10x &#8594;
+          </button>
+        </div>
+        <img id="newImgGO" src="" alt="New Image" />
+      </div>
+    </div>
+    <div class="info">
+      <ul class="info__details">
+        <li>use the button to view results</li>
       </ul>
     </div>
-  </div>
-  <div class="results">
-    <div class="results__js">
-      <h3>JavaScript Processing</h3>
-      <button class="transform__js testing">Transform &#8594;</button>
-      <img id="newImgJS" src="" alt="New Image">
-      <button class="transform__js__bulk bulk-testing">run bulk testing</button>
-    </div>
-    <div class="results__cpp">
-      <h3>c++ Processing</h3>
-      <button class="transform__cpp testing">Transform &#8594;</button>
-      <img id="newImgCPP" src="" alt="New Image">
-      <button class="transform__cpp__bulk bulk-testing">run bulk testing</button>
-    </div>
-    <div class="results__go">
-      <h3>Go Lang Processing</h3>
-      <button class="transform__go testing">Transform &#8594;</button>
-      <img id="newImgGO" src="" alt="New Image">
-      <button class="transform__go__bulk bulk-testing">run bulk testing</button>
-    </div>
-  </div>
-  <div class="info">
-    <ul class="info__details">
-      <li>use the button to view results</li>
-    </ul>
-  </div>
-  <script type="text/javascript">
-    //load c++ wasm module:
-    // var Module = {
-    //   onRuntimeInitialized: function() {
-    //     //Module.test([0]);
-    //   }
-    // };
+    <script type="text/javascript">
+      //load c++ wasm module:
+      // var Module = {
+      //   onRuntimeInitialized: function() {
+      //     //Module.test([0]);
+      //   }
+      // };
 
-    //load Go wasm module:
-    const go = new Go();
-    let mod, inst;
-    let imageType;
-    WebAssembly.instantiateStreaming(fetch("processing.wasm"), go.importObject).then((result) => {
-        go.run(result.instance);
-    }).catch((err) => {
-        console.error(err);
-    });
-  </script>
-  <script src="scripts.js"></script>
-  <script src="cpp_processing.js"></script>
-</body>
+      //load Go wasm module:
+      const go = new Go();
+      let mod, inst;
+      let imageType;
+      WebAssembly.instantiateStreaming(
+        fetch("processing.wasm"),
+        go.importObject
+      )
+        .then((result) => {
+          go.run(result.instance);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    </script>
+    <script src="scripts.js"></script>
+    <script src="cpp_processing.js"></script>
+  </body>
 </html>
