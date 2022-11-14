@@ -284,6 +284,9 @@ var Module = {
       
       getPixelsFromImageUrl(sourceImg.src);
       addInfoToConsole(`New image selected - ${sourceImg.alt}`);
+      document.querySelectorAll(".buttons-container").forEach((el) => {
+        el.classList.remove("inactive");
+      })
       renderConsole();
     }
     

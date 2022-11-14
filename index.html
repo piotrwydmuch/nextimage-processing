@@ -17,7 +17,11 @@
   <body>
     <span class="title">
       <h1>WebAssembly Image Processing</h1>
-      <h2>C++, Go and JavaScript implementations</h2>
+      <br>
+      <p>
+        c++ and Go Lang implementations are compiled to WebAssembly (wasm).<br>
+        Only the JavaScript implementation is used natively. <br>
+      </p>
     </span>
     <div class="header">
       <div class="header__img-change">
@@ -49,7 +53,7 @@
     <div class="results">
       <div class="results__js">
         <h3>JavaScript Processing</h3>
-        <div class="buttons-container">
+        <div class="buttons-container inactive">
           <button class="transform__js testing">Transform once &#8594;</button>
           <button class="transform__js__bulk bulk-testing">
             Transform 10x &#8594;
@@ -58,8 +62,8 @@
         <img id="newImgJS" src="./imgs/placeholder.jpg" alt="New Image" />
       </div>
       <div class="results__cpp">
-        <h3>c++ Processing</h3>
-        <div class="buttons-container">
+        <h3>c++ (wasm) Processing</h3>
+        <div class="buttons-container inactive">
           <button class="transform__cpp testing">Transform once &#8594;</button>
           <button class="transform__cpp__bulk bulk-testing">
             Transform 10x &#8594;
@@ -68,8 +72,8 @@
         <img id="newImgCPP" src="./imgs/placeholder.jpg" alt="New Image" />
       </div>
       <div class="results__go">
-        <h3>Go Lang Processing</h3>
-        <div class="buttons-container">
+        <h3>Go Lang (wasm) Processing</h3>
+        <div class="buttons-container inactive">
           <button class="transform__go testing">Transform once &#8594;</button>
           <button class="transform__go__bulk bulk-testing">
             Transform 10x &#8594;
@@ -80,7 +84,7 @@
     </div>
     <div class="info">
       <ul class="info__details">
-        <li>use the button to view results</li>
+        <li>Select image and experiment with transformations using buttons</li>
       </ul>
     </div>
     <div class="lds-roller hidden"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

@@ -19,7 +19,7 @@ body {
 }
 .title {
   align-self: center;
-  margin: 10px 20px;
+  margin: 10px 20px 20px;
 }
 #srcImg {
   width: 200px;
@@ -59,11 +59,20 @@ body {
   cursor: pointer;
 }
 
+.buttons-container.inactive {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+.buttons-container.inactive button {
+  pointer-events: none;
+}
+
 .results {
   font-family:Verdana, Geneva, Tahoma, sans-serif;
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 .results > div {
   width: 33%;
@@ -77,8 +86,8 @@ body {
 }
 .results div > img {
   margin-top: 8px;
-  width: 100%;
-  min-height: 200px;
+  max-width: 400px;
+  height: auto;
 }
 .results div > button {
   border-radius: 4px;
@@ -105,7 +114,7 @@ body {
 }
 .info__details {
   color: rgb(65, 65, 255);
-  height: 250px;
+  height: 242px;
 }
 
 /* UI console */
@@ -114,8 +123,9 @@ body {
   align-items: flex-end;
   position: absolute;
   width: 100%;
+  margin-top: 10px;
   bottom: 0;
-  height: 250px;
+  height: 242px;
   overflow-y: auto;
   background: rgb(255, 243, 227);
 }
