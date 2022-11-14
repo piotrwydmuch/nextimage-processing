@@ -1,3 +1,4 @@
+let messages = [];
 let sourceImg = document.getElementById("srcImg");
 const btn_js = document.querySelector(".transform__js")
 const btn_cpp = document.querySelector(".transform__cpp")
@@ -145,14 +146,18 @@ var Module = {
       return t1 - t0;
     }
 
-    let messages = [];
     function addInfoToConsole(msg) {
-      if (messages.length < 6) {
-        messages.push(msg);
-      } else {
-        messages.shift();
-        messages.push(msg);
+      function addZero(i) {
+        if (i < 10) {i = "0" + i}
+        return i;
       }
+      const d = new Date();
+      let h = addZero(d.getHours());
+      let m = addZero(d.getMinutes());
+      let s = addZero(d.getSeconds());
+      let time = `${h}:${m}:${s}`;
+      let singleEntry = `${time}: ${msg}`;
+      messages.push(singleEntry);
     }
 
     function renderConsole() {
@@ -162,6 +167,11 @@ var Module = {
         entry.appendChild(document.createTextNode(msg))
         infoDetails.appendChild(entry);
       })
+      
+      infoDetails.parentElement.scrollTo({
+        top: 999999, // always to bottom
+        behavior: 'smooth'
+      });
     }
 
     optionImage.forEach((option) => {

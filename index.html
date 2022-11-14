@@ -43,7 +43,7 @@
       </div>
       <div class="header__img">
         <h2>Source Image</h2>
-        <img id="srcImg" src="" alt="Selected Image" />
+        <img id="srcImg" src="./imgs/placeholder.jpg" alt="Selected Image" />
       </div>
     </div>
     <div class="results">
@@ -55,7 +55,7 @@
             Transform 10x &#8594;
           </button>
         </div>
-        <img id="newImgJS" src="" alt="New Image" />
+        <img id="newImgJS" src="./imgs/placeholder.jpg" alt="New Image" />
       </div>
       <div class="results__cpp">
         <h3>c++ Processing</h3>
@@ -65,7 +65,7 @@
             Transform 10x &#8594;
           </button>
         </div>
-        <img id="newImgCPP" src="" alt="New Image" />
+        <img id="newImgCPP" src="./imgs/placeholder.jpg" alt="New Image" />
       </div>
       <div class="results__go">
         <h3>Go Lang Processing</h3>
@@ -75,7 +75,7 @@
             Transform 10x &#8594;
           </button>
         </div>
-        <img id="newImgGO" src="" alt="New Image" />
+        <img id="newImgGO" src="./imgs/placeholder.jpg" alt="New Image" />
       </div>
     </div>
     <div class="info">
@@ -83,30 +83,31 @@
         <li>use the button to view results</li>
       </ul>
     </div>
-    <script type="text/javascript">
-      //load c++ wasm module:
-      // var Module = {
-      //   onRuntimeInitialized: function() {
-      //     //Module.test([0]);
-      //   }
-      // };
-
-      //load Go wasm module:
-      const go = new Go();
-      let mod, inst;
-      let imageType;
-      WebAssembly.instantiateStreaming(
-        fetch("processing.wasm"),
-        go.importObject
-      )
-        .then((result) => {
-          go.run(result.instance);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    </script>
-    <script src="scripts.js"></script>
-    <script src="cpp_processing.js"></script>
+    <div class="lds-roller hidden"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
   </body>
+<script type="text/javascript">
+  //load c++ wasm module:
+  // var Module = {
+  //   onRuntimeInitialized: function() {
+  //     //Module.test([0]);
+  //   }
+  // };
+
+  //load Go wasm module:
+  const go = new Go();
+  let mod, inst;
+  let imageType;
+  WebAssembly.instantiateStreaming(
+    fetch("processing.wasm"),
+    go.importObject
+  )
+    .then((result) => {
+      go.run(result.instance);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+</script>
+<script src="scripts.js"></script>
+<script src="cpp_processing.js"></script>
 </html>
