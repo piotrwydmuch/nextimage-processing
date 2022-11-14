@@ -1,4 +1,5 @@
 let messages = [];
+let sourceImageSelected = false;
 let sourceImg = document.getElementById("srcImg");
 const btn_js = document.querySelector(".transform__js")
 const btn_cpp = document.querySelector(".transform__cpp")
@@ -177,31 +178,47 @@ var Module = {
     optionImage.forEach((option) => {
       option.addEventListener("click", (e) => {
         const target = e.currentTarget;
+        sourceImageSelected = true;
         setSourceImage(target);
       })
     })
     
+    function isSourceImageSelected() {
+      if (!sourceImageSelected) {
+        alert("Select image to process first!")
+        return false;
+      } else {
+        return true;
+      }
+    }
+    
     // collecting event options in non-annonymus function
     // now its possible to remove event listeners when changing src img
     const jsEventOptions = () => {
+      if (!isSourceImageSelected()) return;
       newImgJS.src = "";
       return makeNewImageJS(globalImageData);
     }
     const cppEventOptions = () => {
+      if (!isSourceImageSelected()) return;
       newImgCPP.src = "";
       return makeNewImageCPP(globalImageData);
     }
     const goEventOptions = () => {
+      if (!isSourceImageSelected()) return;
       newImgGO.src = "";
       return makeNewImageGo(globalImageData);
     }
     const bulktestingJs = () => {
+      if (!isSourceImageSelected()) return;
       bulkTesting(jsEventOptions)
     }
     const bulktestingCpp = () => {
+      if (!isSourceImageSelected()) return;
       bulkTesting(cppEventOptions)
     }
     const bulktestingGo = () => {
+      if (!isSourceImageSelected()) return;
       bulkTesting(goEventOptions)
     }
 
@@ -266,11 +283,11 @@ var Module = {
       target.classList.add("active");
       
       getPixelsFromImageUrl(sourceImg.src);
-      eventsHandler();
       addInfoToConsole(`New image selected - ${sourceImg.alt}`);
       renderConsole();
     }
-
+    
+    eventsHandler();
     getPixelsFromImageUrl(sourceImg.src);
   },
 };
