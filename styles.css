@@ -134,6 +134,7 @@ content {
   height: 242px;
   overflow-y: auto;
   background: rgb(255, 243, 227);
+  box-shadow: 0 10px 20px #000;
 }
 ul.info__details {
   background: rgb(255, 243, 227);
