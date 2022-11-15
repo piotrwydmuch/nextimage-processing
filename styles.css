@@ -21,6 +21,7 @@ content {
   background-color: rgb(255, 243, 227);
   box-shadow: 3px 2px 5px #dedede;
   padding: 12px;
+  flex-wrap: wrap;
 }
 .title {
   align-self: center;
@@ -126,7 +127,7 @@ content {
 .info {
   display: flex;
   align-items: flex-end;
-  position: absolute;
+  position: fixed;
   width: 100%;
   margin-top: 10px;
   bottom: 0;
