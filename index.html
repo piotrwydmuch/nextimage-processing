@@ -15,73 +15,75 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <span class="title">
-      <h1>WebAssembly Image Processing</h1>
-      <br>
-      <p>
-        c++ and Go Lang implementations are compiled to WebAssembly (wasm).<br>
-        Only the JavaScript implementation is used natively. <br>
-      </p>
-    </span>
-    <div class="header">
-      <div class="header__img-change">
-        <h3>Select image to process:</h3>
-        <ul class="header__img-change_ul">
-          <li id="img-1" class="option-img">
-            <img src="./imgs/lenna.png" alt="Lenna Image" />
-            <p>512px / 512px<br>463 KB</p>
-          </li>
-          <li id="img-2" class="option-img">
-            <img src="./imgs/alfa.jpg" alt="Car Image" />
-            <p>1600px / 1200px<br>292 KB</p>
-          </li>
-          <li id="img-3" class="option-img">
-            <img src="./imgs/zelki.jpeg" alt="Candies" />
-            <p>2560px / 1600px<br>544 KB</p>
-          </li>
-          <li id="img-4" class="option-img">
-            <img src="./imgs/space.jpg" alt="Space" />
-            <p>5302px / 3805px<br>3000 KB</p>
-          </li>
-        </ul>
-      </div>
-      <div class="header__img">
-        <h2>Source Image</h2>
-        <img id="srcImg" src="./imgs/placeholder.jpg" alt="Selected Image" />
-      </div>
-    </div>
-    <div class="results">
-      <div class="results__js">
-        <h3>JavaScript Processing</h3>
-        <div class="buttons-container inactive">
-          <button class="transform__js testing">Transform once &#8594;</button>
-          <button class="transform__js__bulk bulk-testing">
-            Transform 10x &#8594;
-          </button>
+    <content>
+      <header class="title">
+        <h1>WebAssembly Image Processing</h1>
+        <br>
+        <p>
+          c++ and Go Lang implementations are compiled to WebAssembly (wasm).<br>
+          Only the JavaScript implementation is used natively. <br>
+        </p>
+      </header>
+      <div class="header">
+        <div class="header__img-change">
+          <h3>Select image to process:</h3>
+          <ul class="header__img-change_ul">
+            <li id="img-1" class="option-img">
+              <img src="./imgs/lenna.png" alt="Lenna Image" />
+              <p>512px / 512px<br>463 KB</p>
+            </li>
+            <li id="img-2" class="option-img">
+              <img src="./imgs/alfa.jpg" alt="Car Image" />
+              <p>1600px / 1200px<br>292 KB</p>
+            </li>
+            <li id="img-3" class="option-img">
+              <img src="./imgs/zelki.jpeg" alt="Candies" />
+              <p>2560px / 1600px<br>544 KB</p>
+            </li>
+            <li id="img-4" class="option-img">
+              <img src="./imgs/space.jpg" alt="Space" />
+              <p>5302px / 3805px<br>3000 KB</p>
+            </li>
+          </ul>
         </div>
-        <img id="newImgJS" src="./imgs/placeholder.jpg" alt="New Image" />
-      </div>
-      <div class="results__cpp">
-        <h3>c++ (wasm) Processing</h3>
-        <div class="buttons-container inactive">
-          <button class="transform__cpp testing">Transform once &#8594;</button>
-          <button class="transform__cpp__bulk bulk-testing">
-            Transform 10x &#8594;
-          </button>
+        <div class="header__img">
+          <h2>Source Image</h2>
+          <img id="srcImg" src="./imgs/placeholder.jpg" alt="Selected Image" />
         </div>
-        <img id="newImgCPP" src="./imgs/placeholder.jpg" alt="New Image" />
       </div>
-      <div class="results__go">
-        <h3>Go Lang (wasm) Processing</h3>
-        <div class="buttons-container inactive">
-          <button class="transform__go testing">Transform once &#8594;</button>
-          <button class="transform__go__bulk bulk-testing">
-            Transform 10x &#8594;
-          </button>
+      <div class="results">
+        <div class="results__js">
+          <h3>JavaScript Processing</h3>
+          <div class="buttons-container inactive">
+            <button class="transform__js testing">Transform once &#8594;</button>
+            <button class="transform__js__bulk bulk-testing">
+              Transform 10x &#8594;
+            </button>
+          </div>
+          <img id="newImgJS" src="./imgs/placeholder.jpg" alt="New Image" />
         </div>
-        <img id="newImgGO" src="./imgs/placeholder.jpg" alt="New Image" />
+        <div class="results__cpp">
+          <h3>c++ (wasm) Processing</h3>
+          <div class="buttons-container inactive">
+            <button class="transform__cpp testing">Transform once &#8594;</button>
+            <button class="transform__cpp__bulk bulk-testing">
+              Transform 10x &#8594;
+            </button>
+          </div>
+          <img id="newImgCPP" src="./imgs/placeholder.jpg" alt="New Image" />
+        </div>
+        <div class="results__go">
+          <h3>Go Lang (wasm) Processing</h3>
+          <div class="buttons-container inactive">
+            <button class="transform__go testing">Transform once &#8594;</button>
+            <button class="transform__go__bulk bulk-testing">
+              Transform 10x &#8594;
+            </button>
+          </div>
+          <img id="newImgGO" src="./imgs/placeholder.jpg" alt="New Image" />
+        </div>
       </div>
-    </div>
+    </content>
     <div class="info">
       <ul class="info__details">
         <li>Select image and experiment with transformations using buttons</li>

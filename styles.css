@@ -8,6 +8,11 @@ body {
   flex-direction: column;
   height: 100vh;
   font-family:Verdana, Geneva, Tahoma, sans-serif;
+  align-items: center;
+}
+content {
+  max-width: 1400px;
+
 }
 .header {
   display: flex;
