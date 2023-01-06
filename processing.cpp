@@ -6,17 +6,15 @@
 auto processImage(const emscripten::val &input) {
   auto data = emscripten::convertJSArrayToNumberVector<int>(input); // copies data
 
-    // Record start time
-    auto start_time = std::chrono::high_resolution_clock::now();
+  // Record start time
+  auto start_time = std::chrono::high_resolution_clock::now();
 
-
-    int i;
-    for (i = 0; i < data.size(); i += 4) {
-        int avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        data[i]     = avg; // red
-        data[i + 1] = avg; // green
-        data[i + 2] = avg; // blue
-    }
+  for (int i = 0; i < data.size(); i += 4) {
+    int avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+    data[i]     = avg;
+    data[i + 1] = avg;
+    data[i + 2] = avg;
+  }
 
   // Record end time
   auto end_time = std::chrono::high_resolution_clock::now();
