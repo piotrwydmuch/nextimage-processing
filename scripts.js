@@ -1,15 +1,18 @@
 let messages = [];
 let sourceImageSelected = false;
 let sourceImg = document.getElementById("srcImg");
-const btn_js = document.querySelector(".transform__js")
-const btn_cpp = document.querySelector(".transform__cpp")
-const btn_go = document.querySelector(".transform__go")
+const btn_js = document.querySelector(".transform__js");
+const btn_cpp = document.querySelector(".transform__cpp");
+const btn_go = document.querySelector(".transform__go");
 const newImgJS = document.querySelector("#newImgJS");
 const newImgCPP = document.querySelector("#newImgCPP");
 const newImgGO = document.querySelector("#newImgGO");
-const infoDetails = document.querySelector(".info__details")
-const optionImage = document.querySelectorAll(".option-img")
-const optionImageList = document.querySelector(".header__img-change_ul")
+const infoDetails = document.querySelector(".info__details");
+const optionArray = document.querySelector(".option-array");
+const optionArraySize = document.querySelector("#option-array__size");
+const optionArrayWarning = document.querySelector(".option-array__warning");
+const optionImage = document.querySelectorAll(".option-img");
+const optionImageList = document.querySelector(".header__img-change_ul");
 const btn_js_bulk = document.querySelector(".transform__js__bulk");
 const btn_cpp_bulk = document.querySelector(".transform__cpp__bulk");
 const btn_go_bulk = document.querySelector(".transform__go__bulk");
@@ -64,14 +67,16 @@ var Module = {
       addInfoToConsole(info)
       renderConsole()
       
-      ctx.putImageData(new ImageData(
-        new Uint8ClampedArray(data),
-        imageData.width,
-        imageData.height
-      ),
-      0,
-      0);
-      newImgJS.src = canvas.toDataURL();
+      if (imageData.height > 1) {
+        ctx.putImageData(new ImageData(
+          new Uint8ClampedArray(data),
+          imageData.width,
+          imageData.height
+        ),
+        0,
+        0);
+        newImgJS.src = canvas.toDataURL();
+      }
 
       return t1 - t0;
     }
@@ -99,16 +104,18 @@ var Module = {
       addInfoToConsole(info)
       renderConsole()
 
-      ctx.putImageData(
-        new ImageData(
-          new Uint8ClampedArray(newData),
-          imageData.width,
-          imageData.height
-        ),
-        0,
-        0
-      );
-      newImgGO.src = canvas.toDataURL();
+      if (imageData.height > 1) {
+        ctx.putImageData(
+          new ImageData(
+            new Uint8ClampedArray(newData),
+            imageData.width,
+            imageData.height
+          ),
+          0,
+          0
+        );
+        newImgGO.src = canvas.toDataURL();
+      }
 
       return t1 - t0;
     }
@@ -133,16 +140,18 @@ var Module = {
       addInfoToConsole(info)
       renderConsole()
 
-      ctx.putImageData(
-        new ImageData(
-          new Uint8ClampedArray(newData),
-          imageData.width,
-          imageData.height
-        ),
-        0,
-        0
-      );
-      newImgCPP.src = canvas.toDataURL();
+      if (imageData.height > 1) {
+        ctx.putImageData(
+          new ImageData(
+            new Uint8ClampedArray(newData),
+            imageData.width,
+            imageData.height
+          ),
+          0,
+          0
+        );
+        newImgCPP.src = canvas.toDataURL();
+      }
 
       return t1 - t0;
     }
@@ -181,6 +190,12 @@ var Module = {
         sourceImageSelected = true;
         setSourceImage(target);
       })
+    })
+
+    optionArray.addEventListener("click", (e) => {
+      const target = e.currentTarget;
+      sourceImageSelected = true;
+      setSourceImage(target, true);
     })
     
     function isSourceImageSelected() {
@@ -273,16 +288,29 @@ var Module = {
       btn_go_bulk.addEventListener("click", bulktestingGo)
     }
 
-    function setSourceImage(target) {
-      sourceImg.src = target.children[0].src;
-      sourceImg.alt = target.children[0].alt;
+    function setSourceImage(target, isArr) {
+
+      if (isArr) {
+        sourceImg.src = "./imgs/placeholder.jpg";
+        sourceImg.alt = `Array of data. Length: ${optionArraySize.value}`;
+        globalImageData = new ImageData(optionArraySize.value / 4, 1); //ImageData(width, height); 
+        // new ImageDate creates Uint8ClampedArray and its size is equal to (width*height*4)
+        console.log(globalImageData)
+        const warningClassList = optionArrayWarning.classList;
+        (optionArraySize.value > 67108864) ? // 2^26 
+          warningClassList.remove("hidden") : 
+          warningClassList.add("hidden");
+      } else {
+        sourceImg.src = target.children[0].src;
+        sourceImg.alt = target.children[0].alt;
+      }
 
       Array.from(optionImageList.children).forEach((el) => {
         el.classList.remove("active");
       })
       target.classList.add("active");
       
-      getPixelsFromImageUrl(sourceImg.src);
+      if (!isArr) getPixelsFromImageUrl(sourceImg.src);
       addInfoToConsole(`New image selected - ${sourceImg.alt}`);
       document.querySelectorAll(".buttons-container").forEach((el) => {
         el.classList.remove("inactive");

@@ -26,8 +26,20 @@
       </header>
       <div class="header">
         <div class="header__img-change">
-          <h3>Select image to process:</h3>
+          <h3>Select data to process:</h3>
           <ul class="header__img-change_ul">
+            <li id="array" class="option-array">
+              <p>Array [ 0, 0, 0, … ]</p>
+              <p>Select length:
+                <select name="option-array__size" id="option-array__size">
+                  <option value="16777216">2&sup2;&#8308;</option>
+                  <option value="33554432">2&sup2;&#8309;</option>
+                  <option value="67108864">2&sup2;&#8310;</option>
+                  <option value="134217728">2&sup2;&#8311;</option>
+                </select>
+              </p>
+              <p class="option-array__warning hidden">Note: this size may cause browser error due to lack of memory</p>
+            </li>
             <li id="img-1" class="option-img">
               <img src="./imgs/lenna.png" alt="Lenna Image" />
               <p>512px / 512px<br>463 KB</p>
