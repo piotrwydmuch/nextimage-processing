@@ -1,51 +1,55 @@
 # nextimage-processing
 
-## uruchamianie
+## Uruchamianie
 
-- potrzebujemy serwera http:
+Potrzebujemy serwera http:
 
-```python3 -m http.server```
+`$ python3 -m http.server`
 
-następnie wchodzimy pod adres `http://localhost:8000/`
+następnie wchodzimy pod adres localhost.
 
-## development (ogólnie)
+## Instalacja i uruchomienie emscripten
 
-- przed startem potrzebne jest dodanie do projektu biblioteki emscripten
+- przed startem potrzebne jest dodanie do projektu biblioteki emscripten (opis w poniższym linku)
 
 https://emscripten.org/docs/getting_started/downloads.html#sdk-download-and-install
 
-- jeśli jest już zainstalowany emscripten to w folderze /emsdk
+- jeśli jest już zainstalowany emscripten to w folderze `/emsdk` używamy komendy
 
-```source ./emsdk_env.sh```
+`$ source ./emsdk_env.sh`
 
-## development (c++)
+## Development (c++)
 
--  żeby korzystać z komend emsdk
+Żeby korzystać z komend emsdk (to samo co wyżej):
 
-$ source ./emsdk_env.sh
+`$ source ./emsdk_env.sh`
 
--  można sprawdzić czy wszystko działa
+Można sprawdzić czy wszystko działa
 
-$ emcc --version
+`$ emcc --version`
 
-- zbudowanie modułu wasm (w miejsce `example` podajemy kolejno nazwe pliku wyjściowego oraz wejsciowego):
+### Budowanie modułu WASM
 
-```emcc --bind -o cpp_processing.js processing.cpp```
+Podajemy kolejno nazwe pliku wyjściowego oraz wejsciowego:
 
-- dla dużych plików potrzebne dodanie flagi ```-s ALLOW_MEMORY_GROWTH=1```
+`$ emcc --bind -o cpp_processing.js processing.cpp`
 
-```emcc --bind -o cpp_processing.js processing.cpp -s ALLOW_MEMORY_GROWTH=1```
+Dla dużych plików potrzebne dodanie flagi `-s ALLOW_MEMORY_GROWTH=1`
 
-- algorytmy przetwarzania obrazów znajdują się w pliku `./processing.cpp`
+`$ emcc --bind -o cpp_processing.js processing.cpp -s ALLOW_MEMORY_GROWTH=1`
 
-## development (go lang)
+Algorytmy przetwarzania obrazów znajdują się w pliku `./processing.cpp`
 
-- plik `processing.go` traktujemy następującą komendą
+## Development (Go)
 
-```GOOS=js GOARCH=wasm go build -o processing.wasm```
+### Budowanie modułu WASM
 
-- algorytmy przetwarzania obrazów znajdują się w pliku `./processing.go`
+Plik `processing.go` traktujemy następującą komendą:
 
-## development (js)
+`$ GOOS=js GOARCH=wasm go build -o processing.wasm`
 
-- algorytmy przetwarzania obrazów znajdują się w pliku `./scripts.js`
+Algorytmy przetwarzania obrazów znajdują się w pliku `./processing.go`
+
+## Development (JavaScript)
+
+Algorytmy przetwarzania obrazów znajdują się w pliku `./scripts.js`
