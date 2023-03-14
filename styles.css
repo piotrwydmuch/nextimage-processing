@@ -83,6 +83,11 @@ content {
   background-color: rgb(255, 187, 103);
   cursor: pointer;
 }
+.buttons-container__title {
+  font-size: 12px;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
 
 .buttons-container.inactive {
   opacity: 0.32;
