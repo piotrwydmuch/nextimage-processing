@@ -245,7 +245,7 @@ var Module = {
         }
         console.log("Done!");
         console.log(resultArray);
-        // sendDataToBackend(resultArray)
+        //sendDataToBackend(resultArray)
       }
       run();
     }
@@ -263,6 +263,8 @@ var Module = {
         }),
       }).then((r) => {
         console.log(r);
+      }).catch(err => {
+        window.alert('Test result cannot be saved to file.  Err: ' + err)
       });
     }
 
