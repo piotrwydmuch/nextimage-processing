@@ -1,7 +1,8 @@
 let messages = [];
 let sourceImageSelected = false;
 let sourceImg = document.getElementById("srcImg");
-const btn_js = document.querySelector(".transform__js");
+const btn_js_grayscale = document.querySelector(".transform__js__grayscale");
+const btn_js_medianFilter = document.querySelector(".transform__js__medianFilter");
 const btn_cpp = document.querySelector(".transform__cpp");
 const btn_go = document.querySelector(".transform__go");
 const newImgJS = document.querySelector("#newImgJS");
@@ -13,12 +14,73 @@ const optionArraySize = document.querySelector("#option-array__size");
 const optionArrayWarning = document.querySelector(".option-array__warning");
 const optionImage = document.querySelectorAll(".option-img");
 const optionImageList = document.querySelector(".header__img-change_ul");
-const btn_js_bulk = document.querySelector(".transform__js__bulk");
+const btn_js_grayscale_bulk = document.querySelector(".transform__js__grayscale__bulk");
+const btn_js_medianFilter_bulk = document.querySelector(".transform__js__medianFilter__bulk");
 const btn_cpp_bulk = document.querySelector(".transform__cpp__bulk");
 const btn_go_bulk = document.querySelector(".transform__go__bulk");
 
 
 let globalImageData;
+
+function medianFilter(pixels, width, height, kernelSize) {
+  const filteredPixels = new Uint8ClampedArray(pixels.length);
+  
+  for (let i = 0; i < pixels.length; i += 4) {
+    const x = Math.floor((i / 4) % width);
+    const y = Math.floor((i / 4) / width);
+    
+    // Create an array to hold the pixel values in the kernel for each color channel
+    const values = [[], [], []];
+    
+    // Iterate over each pixel in the kernel
+    for (let ky = -kernelSize; ky <= kernelSize; ky++) {
+      for (let kx = -kernelSize; kx <= kernelSize; kx++) {
+        // Get the pixel value at this position for each color channel
+        const px = x + kx;
+        const py = y + ky;
+        const index = (py * width + px) * 4;
+        if (px >= 0 && px < width && py >= 0 && py < height) {
+          values[0].push(pixels[index]);
+          values[1].push(pixels[index + 1]);
+          values[2].push(pixels[index + 2]);
+        }
+      }
+    }
+    
+    // Compute the median value for each color channel
+    // only way to get color image
+    const medianValues = [
+      computeMedian(values[0]),
+      computeMedian(values[1]),
+      computeMedian(values[2])
+    ];
+    
+    filteredPixels[i] = medianValues[0];
+    filteredPixels[i + 1] = medianValues[1];
+    filteredPixels[i + 2] = medianValues[2];
+    filteredPixels[i + 3] = 255; 
+  }
+  
+  return filteredPixels;
+}
+
+function computeMedian(values) {
+  values.sort((a, b) => a - b);
+  const medianIndex = Math.floor(values.length / 2);
+  return values[medianIndex];
+}
+
+function grayscale(data) {
+  for (var i = 0; i < data.length; i += 4) {
+    var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+    data[i] = avg; // red
+    data[i + 1] = avg; // green
+    data[i + 2] = avg; // blue
+  }
+
+  return data;
+}
+
 
 var Module = {
   onRuntimeInitialized: function () {
@@ -43,7 +105,7 @@ var Module = {
 
     }
 
-    function makeNewImageJS(imageData) {
+    function makeNewImageJS(imageData, func) {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
       canvas.width = imageData.width;
@@ -51,12 +113,11 @@ var Module = {
       let data = [...imageData.data];
       
       const t0 = performance.now();
-    
-      for (var i = 0; i < data.length; i += 4) {
-        var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        data[i] = avg; // red
-        data[i + 1] = avg; // green
-        data[i + 2] = avg; // blue
+
+      if (func.name === 'medianFilter') {
+        data = medianFilter(data, imageData.width, imageData.height, 3)
+      } else if (func.name === 'grayscale') {
+        data = grayscale(data);
       }
       
       const t1 = performance.now();
@@ -209,10 +270,15 @@ var Module = {
     
     // collecting event options in non-annonymus function
     // now its possible to remove event listeners when changing src img
-    const jsEventOptions = () => {
+    const jsGrayscaleEventOptions = () => {
       if (!isSourceImageSelected()) return;
       newImgJS.src = "";
-      return makeNewImageJS(globalImageData);
+      return makeNewImageJS(globalImageData, grayscale);
+    }
+    const jsMedianFilterEventOptions = () => {
+      if (!isSourceImageSelected()) return;
+      newImgJS.src = "";
+      return makeNewImageJS(globalImageData, medianFilter);
     }
     const cppEventOptions = () => {
       if (!isSourceImageSelected()) return;
@@ -226,7 +292,7 @@ var Module = {
     }
     const bulktestingJs = () => {
       if (!isSourceImageSelected()) return;
-      bulkTesting(jsEventOptions)
+      bulkTesting(jsGrayscaleEventOptions)
     }
     const bulktestingCpp = () => {
       if (!isSourceImageSelected()) return;
@@ -272,20 +338,24 @@ var Module = {
       // HAX ALERT:
       // idk how to check is there any event
       // so delete it everytime :(
-      btn_js.removeEventListener("click", jsEventOptions)
+      btn_js_grayscale.removeEventListener("click", jsGrayscaleEventOptions)
+      btn_js_medianFilter.removeEventListener("click", jsMedianFilterEventOptions)
       btn_cpp.removeEventListener("click", cppEventOptions)
       btn_go.removeEventListener("click", goEventOptions)
       // now add new events with new data
-      btn_js.addEventListener("click", jsEventOptions)
+      btn_js_grayscale.addEventListener("click", jsGrayscaleEventOptions)
+      btn_js_medianFilter.addEventListener("click", jsMedianFilterEventOptions)
       btn_cpp.addEventListener("click", cppEventOptions)
       btn_go.addEventListener("click", goEventOptions)
 
       //bulk testing (same hax like above)
-      btn_js_bulk.removeEventListener("click", bulktestingJs)
+      btn_js_grayscale_bulk.removeEventListener("click", bulktestingJs)
+      btn_js_medianFilter_bulk.removeEventListener("click", bulktestingJs)
       btn_cpp_bulk.removeEventListener("click", bulktestingCpp)
       btn_go_bulk.removeEventListener("click", bulktestingGo)
 
-      btn_js_bulk.addEventListener("click", bulktestingJs)
+      btn_js_grayscale_bulk.addEventListener("click", bulktestingJs)
+      btn_js_medianFilter_bulk.addEventListener("click", bulktestingJs)
       btn_cpp_bulk.addEventListener("click", bulktestingCpp)
       btn_go_bulk.addEventListener("click", bulktestingGo)
     }
