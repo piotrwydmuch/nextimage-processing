@@ -147,6 +147,11 @@ content {
   height: 242px;
 }
 
+button.disabled {
+  pointer-events: none;
+  opacity: 0.2;
+}
+
 /* UI console */
 .info {
   display: flex;

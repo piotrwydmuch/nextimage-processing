@@ -3,7 +3,8 @@ let sourceImageSelected = false;
 let sourceImg = document.getElementById("srcImg");
 const btn_js_grayscale = document.querySelector(".transform__js__grayscale");
 const btn_js_medianFilter = document.querySelector(".transform__js__medianFilter");
-const btn_cpp = document.querySelector(".transform__cpp");
+const btn_cpp_grayscale = document.querySelector(".transform__cpp__grayscale");
+const btn_cpp_medianFilter = document.querySelector(".transform__cpp__medianFilter");
 const btn_go = document.querySelector(".transform__go");
 const newImgJS = document.querySelector("#newImgJS");
 const newImgCPP = document.querySelector("#newImgCPP");
@@ -16,7 +17,8 @@ const optionImage = document.querySelectorAll(".option-img");
 const optionImageList = document.querySelector(".header__img-change_ul");
 const btn_js_grayscale_bulk = document.querySelector(".transform__js__grayscale__bulk");
 const btn_js_medianFilter_bulk = document.querySelector(".transform__js__medianFilter__bulk");
-const btn_cpp_bulk = document.querySelector(".transform__cpp__bulk");
+const btn_cpp_grayscale_bulk = document.querySelector(".transform__cpp__grayscale__bulk");
+const btn_cpp_medianFilter_bulk = document.querySelector(".transform__cpp__medianFilter__bulk");
 const btn_go_bulk = document.querySelector(".transform__go__bulk");
 
 
@@ -181,7 +183,7 @@ var Module = {
       return t1 - t0;
     }
 
-    function makeNewImageCPP(imageData) {
+    function makeNewImageCPP(imageData, func) {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       canvas.width = imageData.width;
@@ -191,7 +193,11 @@ var Module = {
       const t0 = performance.now();
       
       // WASM magic is here 
-      newData = Module.processImage(data);
+      if (func.name === 'medianFilter') {
+        newData = Module.medianFilter(data, imageData.width, imageData.height, 3);
+      } else if (func.name === 'grayscale') {
+        newData = Module.processImage(data);
+      }
 
       const t1 = performance.now();
       let info = `C++ processing took ${t1 - t0} milliseconds.`
@@ -280,16 +286,17 @@ var Module = {
       newImgJS.src = "";
       return makeNewImageJS(globalImageData, medianFilter);
     }
-    const cppEventOptions = () => {
+    const cppGrayscaleEventOptions = () => {
       if (!isSourceImageSelected()) return;
       newImgCPP.src = "";
-      return makeNewImageCPP(globalImageData);
+      return makeNewImageCPP(globalImageData, grayscale);
     }
-    const goEventOptions = () => {
+    const cppMedianFilterEventOptions = () => {
       if (!isSourceImageSelected()) return;
-      newImgGO.src = "";
-      return makeNewImageGo(globalImageData);
+      newImgCPP.src = "";
+      return makeNewImageCPP(globalImageData, medianFilter);
     }
+
     const bulktestingJs = () => {
       if (!isSourceImageSelected()) return;
       bulkTesting(jsGrayscaleEventOptions)
@@ -297,6 +304,11 @@ var Module = {
     const bulktestingCpp = () => {
       if (!isSourceImageSelected()) return;
       bulkTesting(cppEventOptions)
+    }
+    const goEventOptions = () => {
+      if (!isSourceImageSelected()) return;
+      newImgGO.src = "";
+      return makeNewImageGo(globalImageData);
     }
     const bulktestingGo = () => {
       if (!isSourceImageSelected()) return;
@@ -340,23 +352,27 @@ var Module = {
       // so delete it everytime :(
       btn_js_grayscale.removeEventListener("click", jsGrayscaleEventOptions)
       btn_js_medianFilter.removeEventListener("click", jsMedianFilterEventOptions)
-      btn_cpp.removeEventListener("click", cppEventOptions)
+      btn_cpp_grayscale.removeEventListener("click", cppGrayscaleEventOptions)
+      btn_cpp_medianFilter.removeEventListener("click", cppMedianFilterEventOptions)
       btn_go.removeEventListener("click", goEventOptions)
       // now add new events with new data
       btn_js_grayscale.addEventListener("click", jsGrayscaleEventOptions)
       btn_js_medianFilter.addEventListener("click", jsMedianFilterEventOptions)
-      btn_cpp.addEventListener("click", cppEventOptions)
+      btn_cpp_grayscale.addEventListener("click", cppGrayscaleEventOptions)
+      btn_cpp_medianFilter.addEventListener("click", cppMedianFilterEventOptions)
       btn_go.addEventListener("click", goEventOptions)
 
       //bulk testing (same hax like above)
-      btn_js_grayscale_bulk.removeEventListener("click", bulktestingJs)
-      btn_js_medianFilter_bulk.removeEventListener("click", bulktestingJs)
-      btn_cpp_bulk.removeEventListener("click", bulktestingCpp)
+      btn_js_grayscale_bulk.removeEventListener("click", bulktestingJs) // fix me
+      btn_js_medianFilter_bulk.removeEventListener("click", bulktestingJs) // fix me
+      btn_cpp_grayscale_bulk.removeEventListener("click", bulktestingCpp)// fix me
+      btn_cpp_medianFilter_bulk.removeEventListener("click", bulktestingCpp)// fix me
       btn_go_bulk.removeEventListener("click", bulktestingGo)
 
-      btn_js_grayscale_bulk.addEventListener("click", bulktestingJs)
-      btn_js_medianFilter_bulk.addEventListener("click", bulktestingJs)
-      btn_cpp_bulk.addEventListener("click", bulktestingCpp)
+      btn_js_grayscale_bulk.addEventListener("click", bulktestingJs) // fix me
+      btn_js_medianFilter_bulk.addEventListener("click", bulktestingJs) // fix me
+      btn_cpp_grayscale_bulk.addEventListener("click", bulktestingCpp)// fix me
+      btn_cpp_medianFilter_bulk.addEventListener("click", bulktestingCpp)// fix me
       btn_go_bulk.addEventListener("click", bulktestingGo)
     }
 
