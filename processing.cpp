@@ -49,16 +49,21 @@ auto medianFilter(const emscripten::val &input, int width, int height, int kerne
 
   // Record start time
   auto start_time = std::chrono::high_resolution_clock::now();
-  
+
+  // Create a vector to hold the pixel values in the kernel for each color channel
+  // Maybe it can be done better (?)
+  std::vector<int> values[3];
+  for (int i = 0; i < 3; i++) {
+    values[i].resize((2 * kernelSize + 1) * (2 * kernelSize + 1));
+  }
+
   // Iterate over each pixel in the image
   for (int i = 0; i < width * height * 4; i += 4) {
     int x = (i / 4) % width;
     int y = (i / 4) / width;
-    
-    // Create a vector to hold the pixel values in the kernel for each color channel
-    std::vector<int> values[3];
-    
+
     // Iterate over each pixel in the kernel
+    int j = 0;
     for (int ky = -kernelSize; ky <= kernelSize; ky++) {
       for (int kx = -kernelSize; kx <= kernelSize; kx++) {
         // Get the pixel value at this position for each color channel
@@ -66,27 +71,28 @@ auto medianFilter(const emscripten::val &input, int width, int height, int kerne
         int py = y + ky;
         int index = (py * width + px) * 4;
         if (px >= 0 && px < width && py >= 0 && py < height) {
-          values[0].push_back(pixels[index]);
-          values[1].push_back(pixels[index + 1]);
-          values[2].push_back(pixels[index + 2]);
+          values[0][j] = pixels[index];
+          values[1][j] = pixels[index + 1];
+          values[2][j] = pixels[index + 2];
         }
+        j++;
       }
     }
-    
+
     // Compute the median value for each color channel
     std::vector<int> medianValues = {
       computeMedian(values[0]),
       computeMedian(values[1]),
       computeMedian(values[2])
     };
-    
+
     // Set the pixel value in the filtered image for each color channel
     filteredPixels[i] = medianValues[0];
     filteredPixels[i + 1] = medianValues[1];
     filteredPixels[i + 2] = medianValues[2];
     filteredPixels[i + 3] = 255; // Alpha channel is always 255
   }
-  
+
   // Copy the filtered pixels back to the original pixel array
   for (int i = 0; i < width * height * 4; i++) {
     pixels[i] = filteredPixels[i];
