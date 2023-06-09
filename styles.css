@@ -184,3 +184,7 @@ ul.info__details > li:before {
   height: 30px;
   background-color: rgb(255, 187, 103);
 }
+
+.section-title {
+  padding: 12px;
+}

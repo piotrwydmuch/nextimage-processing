@@ -26,7 +26,7 @@
       </header>
       <div class="header">
         <div class="header__img-change">
-          <h3>Select data to process:</h3>
+          <h2>1. Select data to process:</h2>
           <ul class="header__img-change_ul">
             <li id="array" class="option-array">
               <p>Array [ 0, 0, 0, … ]</p>
@@ -59,13 +59,14 @@
           </ul>
         </div>
         <div class="header__img">
-          <h2>Source Image</h2>
+          <h3>Source Image</h3>
           <img id="srcImg" src="./imgs/placeholder.jpg" alt="Selected Image" />
         </div>
       </div>
+      <h2 class="section-title">2. Select a processing algorithm:</h2>
       <div class="results">
         <div class="results__js">
-          <h3>JavaScript Processing</h3>
+          <h3>a&rpar; JavaScript</h3>
           <div class="buttons-container inactive">
             <p class="buttons-container__title">
               Grayscale
@@ -87,7 +88,7 @@
           <img id="newImgJS" src="./imgs/placeholder.jpg" alt="New Image" />
         </div>
         <div class="results__cpp">
-          <h3>c++ (wasm) Processing</h3>
+          <h3>b&rpar; c++ compiled to WASM</h3>
           <div class="buttons-container inactive">
             <p class="buttons-container__title">
               Grayscale
@@ -109,7 +110,7 @@
           <img id="newImgCPP" src="./imgs/placeholder.jpg" alt="New Image" />
         </div>
         <div class="results__go">
-          <h3>Go Lang (wasm) Processing</h3>
+          <h3>c&rpar; Go compiled to WASM</h3>
           <div class="buttons-container inactive">
             <p class="buttons-container__title">
               Grayscale
