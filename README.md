@@ -38,6 +38,10 @@ Dla dużych plików potrzebne dodanie flagi `-s ALLOW_MEMORY_GROWTH=1`
 
 `$ emcc --bind -o cpp_processing.js processing.cpp -s ALLOW_MEMORY_GROWTH=1`
 
+W celu optymalizacji można użyć opcji `-Ox`, gdzie `x` to poziom agresji optymalizacji od 1 do 3
+
+`$ emcc --bind -o cpp_processing.js processing.cpp -s ALLOW_MEMORY_GROWTH=1 -O2`
+
 Algorytmy przetwarzania obrazów znajdują się w pliku `./processing.cpp`
 
 ## Development (Go)
