@@ -92,349 +92,343 @@ function grayscale(data) {
 }
 
 
-var Module = {
-  onRuntimeInitialized: function () {
+function getPixelsFromImageUrl(url) {
+  let canvas = document.createElement("canvas");
+  let ctx = canvas.getContext("2d");
+  let img = new Image();
+  img.setAttribute("crossOrigin", "anonymous");
+  img.src = url;
+  img.onload = function () {
+    canvas.width = this.width;
+    canvas.height = this.height;
+    ctx.drawImage(this, 0, 0);
+    globalImageData = ctx.getImageData(0, 0, this.width, this.height);
+  
+    //first time run it automaticly
+    // makeNewImageJS(imageData);
+    // makeNewImageCPP(imageData);
+    // makeNewImageGO(imageData); // fix me
+  };
 
-    function getPixelsFromImageUrl(url) {
-      let canvas = document.createElement("canvas");
-      let ctx = canvas.getContext("2d");
-      let img = new Image();
-      img.setAttribute("crossOrigin", "anonymous");
-      img.src = url;
-      img.onload = function () {
-        canvas.width = this.width;
-        canvas.height = this.height;
-        ctx.drawImage(this, 0, 0);
-        globalImageData = ctx.getImageData(0, 0, this.width, this.height);
-      
-        //first time run it automaticly
-        // makeNewImageJS(imageData);
-        // makeNewImageCPP(imageData);
-        // makeNewImageGO(imageData); // fix me
-      };
+}
 
+function makeNewImageJS(imageData, func) {
+  let canvas = document.createElement("canvas");
+  let ctx = canvas.getContext("2d");
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  let data = [...imageData.data];
+  
+  const t0 = performance.now();
+
+  if (func.name === 'medianFilter') {
+    data = medianFilter(data, imageData.width, imageData.height, MEDIAN_FILTER_KERNEL_SIZE)
+  } else if (func.name === 'grayscale') {
+    data = grayscale(data);
+  }
+  
+  const t1 = performance.now();
+  let info = `JS processing took ${t1 - t0} milliseconds.`
+  console.info(info)
+
+  //UI console
+  addInfoToConsole(info)
+  renderConsole()
+  
+  if (imageData.height > 1) {
+    ctx.putImageData(new ImageData(
+      new Uint8ClampedArray(data),
+      imageData.width,
+      imageData.height
+    ),
+    0,
+    0);
+    newImgJS.src = canvas.toDataURL();
+  }
+
+  return t1 - t0;
+}
+
+function makeNewImageGo(imageData, func) {
+  let canvas = document.createElement("canvas");
+  let ctx = canvas.getContext("2d");
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  let data = [...imageData.data];
+  
+  const t0 = performance.now();
+  
+  // WASM magic is here 
+  const new_Uint8Array = new Uint8Array(data);
+  if (func.name === 'medianFilter') {
+    newDataLength = medianFilterGo(new_Uint8Array, imageData.width, imageData.height, MEDIAN_FILTER_KERNEL_SIZE)
+  } else if (func.name === 'grayscale') {
+    newDataLength = grayscaleGo(new_Uint8Array)
+  }
+  newData = new Uint8Array(newDataLength)
+  SetUint8ArrayInGo(newData)
+
+  const t1 = performance.now();
+  let info = `GO processing took ${t1 - t0} milliseconds.`
+  console.info(info)
+  
+  //UI console
+  addInfoToConsole(info)
+  renderConsole()
+
+  if (imageData.height > 1) {
+    ctx.putImageData(
+      new ImageData(
+        new Uint8ClampedArray(newData),
+        imageData.width,
+        imageData.height
+      ),
+      0,
+      0
+    );
+    newImgGO.src = canvas.toDataURL();
+  }
+
+  return t1 - t0;
+}
+
+function makeNewImageCPP(imageData, func) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  let data = imageData.data;
+
+  const t0 = performance.now();
+  
+  // WASM magic is here 
+  if (func.name === 'medianFilter') {
+    newData = Module.medianFilter(data, imageData.width, imageData.height, MEDIAN_FILTER_KERNEL_SIZE);
+  } else if (func.name === 'grayscale') {
+    newData = Module.processImage(data);
+  }
+
+  const t1 = performance.now();
+  let info = `C++ processing took ${t1 - t0} milliseconds.`
+  console.info(info)
+  
+  //UI console
+  addInfoToConsole(info)
+  renderConsole()
+
+  if (imageData.height > 1) {
+    ctx.putImageData(
+      new ImageData(
+        new Uint8ClampedArray(newData),
+        imageData.width,
+        imageData.height
+      ),
+      0,
+      0
+    );
+    newImgCPP.src = canvas.toDataURL();
+  }
+
+  return t1 - t0;
+}
+
+function addInfoToConsole(msg) {
+  function addZero(i) {
+    if (i < 10) {i = "0" + i}
+    return i;
+  }
+  const d = new Date();
+  let h = addZero(d.getHours());
+  let m = addZero(d.getMinutes());
+  let s = addZero(d.getSeconds());
+  let time = `${h}:${m}:${s}`;
+  let singleEntry = `${time}: ${msg}`;
+  messages.push(singleEntry);
+}
+
+function renderConsole() {
+  infoDetails.innerHTML = '';
+  messages.forEach((msg) => {
+    let entry = document.createElement('li');
+    entry.appendChild(document.createTextNode(msg))
+    infoDetails.appendChild(entry);
+  })
+  
+  infoDetails.parentElement.scrollTo({
+    top: 999999, // always to bottom
+    behavior: 'smooth'
+  });
+}
+
+optionImage.forEach((option) => {
+  option.addEventListener("click", (e) => {
+    const target = e.currentTarget;
+    sourceImageSelected = true;
+    setSourceImage(target);
+  })
+})
+
+optionArray.addEventListener("click", (e) => {
+  const target = e.currentTarget;
+  sourceImageSelected = true;
+  setSourceImage(target, true);
+})
+
+function isSourceImageSelected() {
+  if (!sourceImageSelected) {
+    alert("Select image to process first!")
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// collecting event options in non-annonymus function
+// now its possible to remove event listeners when changing src img
+const jsGrayscaleEventOptions = () => {
+  if (!isSourceImageSelected()) return;
+  newImgJS.src = "";
+  return makeNewImageJS(globalImageData, grayscale);
+}
+const jsMedianFilterEventOptions = () => {
+  if (!isSourceImageSelected()) return;
+  newImgJS.src = "";
+  return makeNewImageJS(globalImageData, medianFilter);
+}
+const cppGrayscaleEventOptions = () => {
+  if (!isSourceImageSelected()) return;
+  newImgCPP.src = "";
+  return makeNewImageCPP(globalImageData, grayscale);
+}
+const cppMedianFilterEventOptions = () => {
+  if (!isSourceImageSelected()) return;
+  newImgCPP.src = "";
+  return makeNewImageCPP(globalImageData, medianFilter);
+}
+const goGrayscaleEventOptions = () => {
+  if (!isSourceImageSelected()) return;
+  newImgGO.src = "";
+  return makeNewImageGo(globalImageData, grayscale);
+}
+const goMedianFilterEventOptions = () => {
+  if (!isSourceImageSelected()) return;
+  newImgGO.src = "";
+  return makeNewImageGo(globalImageData, medianFilter);
+}
+
+const bulktestingJs = () => {
+  if (!isSourceImageSelected()) return;
+  bulkTesting(jsGrayscaleEventOptions)
+}
+const bulktestingCpp = () => {
+  if (!isSourceImageSelected()) return;
+  bulkTesting(cppEventOptions)
+}
+// const goEventOptions = () => {
+//   if (!isSourceImageSelected()) return;
+//   newImgGO.src = "";
+//   return makeNewImageGo(globalImageData);
+// }
+const bulktestingGo = () => {
+  if (!isSourceImageSelected()) return;
+  bulkTesting(goEventOptions)
+}
+
+const bulkTesting = (func) => {
+  async function run() {
+    resultArray = [];
+    for (let i = 1; i < 11; i++) {
+      await resultArray.push(func());
     }
+    console.log("Done!");
+    console.log(resultArray);
+    //sendDataToBackend(resultArray)
+  }
+  run();
+}
 
-    function makeNewImageJS(imageData, func) {
-      let canvas = document.createElement("canvas");
-      let ctx = canvas.getContext("2d");
-      canvas.width = imageData.width;
-      canvas.height = imageData.height;
-      let data = [...imageData.data];
-      
-      const t0 = performance.now();
+const sendDataToBackend = (array) => {
+  fetch("http://localhost:5000/save_data", {
+    method: "POST",
+    mode: "cors", // no-cors, *cors, same-origin
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      times: array,
+      run_name: "run_xxx",
+    }),
+  }).then((r) => {
+    console.log(r);
+  }).catch(err => {
+    window.alert('Test result cannot be saved to file.  Err: ' + err)
+  });
+}
 
-      if (func.name === 'medianFilter') {
-        data = medianFilter(data, imageData.width, imageData.height, MEDIAN_FILTER_KERNEL_SIZE)
-      } else if (func.name === 'grayscale') {
-        data = grayscale(data);
-      }
-      
-      const t1 = performance.now();
-      let info = `JS processing took ${t1 - t0} milliseconds.`
-      console.info(info)
+const eventsHandler = () => {
+  // HAX ALERT:
+  // idk how to check is there any event
+  // so delete it everytime :(
+  btn_js_grayscale.removeEventListener("click", jsGrayscaleEventOptions)
+  btn_js_medianFilter.removeEventListener("click", jsMedianFilterEventOptions)
+  btn_cpp_grayscale.removeEventListener("click", cppGrayscaleEventOptions)
+  btn_cpp_medianFilter.removeEventListener("click", cppMedianFilterEventOptions)
+  btn_go_grayscale.removeEventListener("click", goGrayscaleEventOptions)
+  btn_go_medianFilter.removeEventListener("click", goMedianFilterEventOptions)
+  // btn_go.removeEventListener("click", goEventOptions)
+  // now add new events with new data
+  btn_js_grayscale.addEventListener("click", jsGrayscaleEventOptions)
+  btn_js_medianFilter.addEventListener("click", jsMedianFilterEventOptions)
+  btn_cpp_grayscale.addEventListener("click", cppGrayscaleEventOptions)
+  btn_cpp_medianFilter.addEventListener("click", cppMedianFilterEventOptions)
+  btn_go_grayscale.addEventListener("click", goGrayscaleEventOptions)
+  btn_go_medianFilter.addEventListener("click", goMedianFilterEventOptions)
+  // btn_go.addEventListener("click", goEventOptions)
 
-      //UI console
-      addInfoToConsole(info)
-      renderConsole()
-      
-      if (imageData.height > 1) {
-        ctx.putImageData(new ImageData(
-          new Uint8ClampedArray(data),
-          imageData.width,
-          imageData.height
-        ),
-        0,
-        0);
-        newImgJS.src = canvas.toDataURL();
-      }
+  //bulk testing (same hax like above)
+  btn_js_grayscale_bulk.removeEventListener("click", bulktestingJs) // fix me
+  btn_js_medianFilter_bulk.removeEventListener("click", bulktestingJs) // fix me
+  btn_cpp_grayscale_bulk.removeEventListener("click", bulktestingCpp)// fix me
+  // btn_cpp_medianFilter_bulk.removeEventListener("click", bulktestingCpp)// fix me
+  btn_go_grayscale_bulk.removeEventListener("click", bulktestingGo)// fix me
+  // btn_go_medianFilter_bulk.removeEventListener("click", bulktestingGo)// fix me
 
-      return t1 - t0;
-    }
+  btn_js_grayscale_bulk.addEventListener("click", bulktestingJs) // fix me
+  btn_js_medianFilter_bulk.addEventListener("click", bulktestingJs) // fix me
+  btn_cpp_grayscale_bulk.addEventListener("click", bulktestingCpp)// fix me
+  // btn_cpp_medianFilter_bulk.addEventListener("click", bulktestingCpp)// fix me
+  btn_go_grayscale_bulk.addEventListener("click", bulktestingGo)// fix me
+  // btn_go_medianFilter_bulk.addEventListener("click", bulktestingGo)// fix me
+}
 
-    function makeNewImageGo(imageData, func) {
-      let canvas = document.createElement("canvas");
-      let ctx = canvas.getContext("2d");
-      canvas.width = imageData.width;
-      canvas.height = imageData.height;
-      let data = [...imageData.data];
-      
-      const t0 = performance.now();
-      
-      // WASM magic is here 
-      const new_Uint8Array = new Uint8Array(data);
-      if (func.name === 'medianFilter') {
-        newDataLength = medianFilterGo(new_Uint8Array, imageData.width, imageData.height, MEDIAN_FILTER_KERNEL_SIZE)
-      } else if (func.name === 'grayscale') {
-        newDataLength = grayscaleGo(new_Uint8Array)
-      }
-      newData = new Uint8Array(newDataLength)
-			SetUint8ArrayInGo(newData)
+function setSourceImage(target, isArr) {
 
-      const t1 = performance.now();
-      let info = `GO processing took ${t1 - t0} milliseconds.`
-      console.info(info)
-      
-      //UI console
-      addInfoToConsole(info)
-      renderConsole()
+  if (isArr) {
+    sourceImg.src = "./imgs/placeholder.jpg";
+    sourceImg.alt = `Array of data. Length: ${optionArraySize.value}`;
+    globalImageData = new ImageData(optionArraySize.value / 4, 1); //ImageData(width, height); 
+    // new ImageDate creates Uint8ClampedArray and its size is equal to (width*height*4)
+    const warningClassList = optionArrayWarning.classList;
+    (optionArraySize.value > 67108864) ? // 2^26 
+      warningClassList.remove("hidden") : 
+      warningClassList.add("hidden");
+  } else {
+    sourceImg.src = target.children[0].src;
+    sourceImg.alt = target.children[0].alt;
+  }
 
-      if (imageData.height > 1) {
-        ctx.putImageData(
-          new ImageData(
-            new Uint8ClampedArray(newData),
-            imageData.width,
-            imageData.height
-          ),
-          0,
-          0
-        );
-        newImgGO.src = canvas.toDataURL();
-      }
+  Array.from(optionImageList.children).forEach((el) => {
+    el.classList.remove("active");
+  })
+  target.classList.add("active");
+  
+  if (!isArr) getPixelsFromImageUrl(sourceImg.src);
+  addInfoToConsole(`New image selected - ${sourceImg.alt}`);
+  document.querySelectorAll(".buttons-container").forEach((el) => {
+    el.classList.remove("inactive");
+  })
+  renderConsole();
+}
 
-      return t1 - t0;
-    }
-
-    function makeNewImageCPP(imageData, func) {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = imageData.width;
-      canvas.height = imageData.height;
-      let data = imageData.data;
-
-      const t0 = performance.now();
-      
-      // WASM magic is here 
-      if (func.name === 'medianFilter') {
-        newData = Module.medianFilter(data, imageData.width, imageData.height, MEDIAN_FILTER_KERNEL_SIZE);
-      } else if (func.name === 'grayscale') {
-        newData = Module.processImage(data);
-      }
-
-      const t1 = performance.now();
-      let info = `C++ processing took ${t1 - t0} milliseconds.`
-      console.info(info)
-     
-      //UI console
-      addInfoToConsole(info)
-      renderConsole()
-
-      if (imageData.height > 1) {
-        ctx.putImageData(
-          new ImageData(
-            new Uint8ClampedArray(newData),
-            imageData.width,
-            imageData.height
-          ),
-          0,
-          0
-        );
-        newImgCPP.src = canvas.toDataURL();
-      }
-
-      return t1 - t0;
-    }
-
-    function addInfoToConsole(msg) {
-      function addZero(i) {
-        if (i < 10) {i = "0" + i}
-        return i;
-      }
-      const d = new Date();
-      let h = addZero(d.getHours());
-      let m = addZero(d.getMinutes());
-      let s = addZero(d.getSeconds());
-      let time = `${h}:${m}:${s}`;
-      let singleEntry = `${time}: ${msg}`;
-      messages.push(singleEntry);
-    }
-
-    function renderConsole() {
-      infoDetails.innerHTML = '';
-      messages.forEach((msg) => {
-        let entry = document.createElement('li');
-        entry.appendChild(document.createTextNode(msg))
-        infoDetails.appendChild(entry);
-      })
-      
-      infoDetails.parentElement.scrollTo({
-        top: 999999, // always to bottom
-        behavior: 'smooth'
-      });
-    }
-
-    optionImage.forEach((option) => {
-      option.addEventListener("click", (e) => {
-        const target = e.currentTarget;
-        sourceImageSelected = true;
-        setSourceImage(target);
-      })
-    })
-
-    optionArray.addEventListener("click", (e) => {
-      const target = e.currentTarget;
-      sourceImageSelected = true;
-      setSourceImage(target, true);
-    })
-    
-    function isSourceImageSelected() {
-      if (!sourceImageSelected) {
-        alert("Select image to process first!")
-        return false;
-      } else {
-        return true;
-      }
-    }
-    
-    // collecting event options in non-annonymus function
-    // now its possible to remove event listeners when changing src img
-    const jsGrayscaleEventOptions = () => {
-      if (!isSourceImageSelected()) return;
-      newImgJS.src = "";
-      return makeNewImageJS(globalImageData, grayscale);
-    }
-    const jsMedianFilterEventOptions = () => {
-      if (!isSourceImageSelected()) return;
-      newImgJS.src = "";
-      return makeNewImageJS(globalImageData, medianFilter);
-    }
-    const cppGrayscaleEventOptions = () => {
-      if (!isSourceImageSelected()) return;
-      newImgCPP.src = "";
-      return makeNewImageCPP(globalImageData, grayscale);
-    }
-    const cppMedianFilterEventOptions = () => {
-      if (!isSourceImageSelected()) return;
-      newImgCPP.src = "";
-      return makeNewImageCPP(globalImageData, medianFilter);
-    }
-    const goGrayscaleEventOptions = () => {
-      if (!isSourceImageSelected()) return;
-      newImgGO.src = "";
-      return makeNewImageGo(globalImageData, grayscale);
-    }
-    const goMedianFilterEventOptions = () => {
-      if (!isSourceImageSelected()) return;
-      newImgGO.src = "";
-      return makeNewImageGo(globalImageData, medianFilter);
-    }
-
-    const bulktestingJs = () => {
-      if (!isSourceImageSelected()) return;
-      bulkTesting(jsGrayscaleEventOptions)
-    }
-    const bulktestingCpp = () => {
-      if (!isSourceImageSelected()) return;
-      bulkTesting(cppEventOptions)
-    }
-    // const goEventOptions = () => {
-    //   if (!isSourceImageSelected()) return;
-    //   newImgGO.src = "";
-    //   return makeNewImageGo(globalImageData);
-    // }
-    const bulktestingGo = () => {
-      if (!isSourceImageSelected()) return;
-      bulkTesting(goEventOptions)
-    }
-
-    const bulkTesting = (func) => {
-      async function run() {
-        resultArray = [];
-        for (let i = 1; i < 11; i++) {
-          await resultArray.push(func());
-        }
-        console.log("Done!");
-        console.log(resultArray);
-        //sendDataToBackend(resultArray)
-      }
-      run();
-    }
-
-    const sendDataToBackend = (array) => {
-      fetch("http://localhost:5000/save_data", {
-        method: "POST",
-        mode: "cors", // no-cors, *cors, same-origin
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          times: array,
-          run_name: "run_xxx",
-        }),
-      }).then((r) => {
-        console.log(r);
-      }).catch(err => {
-        window.alert('Test result cannot be saved to file.  Err: ' + err)
-      });
-    }
-
-    const eventsHandler = () => {
-      // HAX ALERT:
-      // idk how to check is there any event
-      // so delete it everytime :(
-      btn_js_grayscale.removeEventListener("click", jsGrayscaleEventOptions)
-      btn_js_medianFilter.removeEventListener("click", jsMedianFilterEventOptions)
-      btn_cpp_grayscale.removeEventListener("click", cppGrayscaleEventOptions)
-      btn_cpp_medianFilter.removeEventListener("click", cppMedianFilterEventOptions)
-      btn_go_grayscale.removeEventListener("click", goGrayscaleEventOptions)
-      btn_go_medianFilter.removeEventListener("click", goMedianFilterEventOptions)
-      // btn_go.removeEventListener("click", goEventOptions)
-      // now add new events with new data
-      btn_js_grayscale.addEventListener("click", jsGrayscaleEventOptions)
-      btn_js_medianFilter.addEventListener("click", jsMedianFilterEventOptions)
-      btn_cpp_grayscale.addEventListener("click", cppGrayscaleEventOptions)
-      btn_cpp_medianFilter.addEventListener("click", cppMedianFilterEventOptions)
-      btn_go_grayscale.addEventListener("click", goGrayscaleEventOptions)
-      btn_go_medianFilter.addEventListener("click", goMedianFilterEventOptions)
-      // btn_go.addEventListener("click", goEventOptions)
-
-      //bulk testing (same hax like above)
-      btn_js_grayscale_bulk.removeEventListener("click", bulktestingJs) // fix me
-      btn_js_medianFilter_bulk.removeEventListener("click", bulktestingJs) // fix me
-      btn_cpp_grayscale_bulk.removeEventListener("click", bulktestingCpp)// fix me
-      // btn_cpp_medianFilter_bulk.removeEventListener("click", bulktestingCpp)// fix me
-      btn_go_grayscale_bulk.removeEventListener("click", bulktestingGo)// fix me
-      // btn_go_medianFilter_bulk.removeEventListener("click", bulktestingGo)// fix me
-
-      btn_js_grayscale_bulk.addEventListener("click", bulktestingJs) // fix me
-      btn_js_medianFilter_bulk.addEventListener("click", bulktestingJs) // fix me
-      btn_cpp_grayscale_bulk.addEventListener("click", bulktestingCpp)// fix me
-      // btn_cpp_medianFilter_bulk.addEventListener("click", bulktestingCpp)// fix me
-      btn_go_grayscale_bulk.addEventListener("click", bulktestingGo)// fix me
-      // btn_go_medianFilter_bulk.addEventListener("click", bulktestingGo)// fix me
-    }
-
-    function setSourceImage(target, isArr) {
-
-      if (isArr) {
-        sourceImg.src = "./imgs/placeholder.jpg";
-        sourceImg.alt = `Array of data. Length: ${optionArraySize.value}`;
-        globalImageData = new ImageData(optionArraySize.value / 4, 1); //ImageData(width, height); 
-        // new ImageDate creates Uint8ClampedArray and its size is equal to (width*height*4)
-        console.log(globalImageData)
-        const warningClassList = optionArrayWarning.classList;
-        (optionArraySize.value > 67108864) ? // 2^26 
-          warningClassList.remove("hidden") : 
-          warningClassList.add("hidden");
-      } else {
-        sourceImg.src = target.children[0].src;
-        sourceImg.alt = target.children[0].alt;
-      }
-
-      Array.from(optionImageList.children).forEach((el) => {
-        el.classList.remove("active");
-      })
-      target.classList.add("active");
-      
-      if (!isArr) getPixelsFromImageUrl(sourceImg.src);
-      addInfoToConsole(`New image selected - ${sourceImg.alt}`);
-      document.querySelectorAll(".buttons-container").forEach((el) => {
-        el.classList.remove("inactive");
-      })
-      renderConsole();
-    }
-    
-    eventsHandler();
-    getPixelsFromImageUrl(sourceImg.src);
-  },
-};
+eventsHandler();
+getPixelsFromImageUrl(sourceImg.src);
