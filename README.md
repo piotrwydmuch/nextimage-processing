@@ -1,5 +1,7 @@
 # nextimage-processing
 
+Aplikacja pozwala na analizę szybkości działania wybranych algorytmów przetwarzania obrazów (C++, Go, JavaScript) implementowanych po stronie przeglądarki internetowej przy pomocy WebAssembly.
+
 ## Uruchamianie
 
 Potrzebujemy serwera http:
