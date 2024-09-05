@@ -2,6 +2,8 @@
 
 Aplikacja pozwala na analizę szybkości działania wybranych algorytmów przetwarzania obrazów (C++, Go, JavaScript) implementowanych po stronie przeglądarki internetowej przy pomocy WebAssembly.
 
+Można przetestować ją tutaj: https://jolly-cray-4b8db4.netlify.app/
+
 ## Uruchamianie
 
 Potrzebujemy serwera http:
