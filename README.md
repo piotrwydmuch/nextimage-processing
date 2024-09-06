@@ -1,63 +1,63 @@
 # nextimage-processing
 
-Aplikacja pozwala na analizę szybkości działania wybranych algorytmów przetwarzania obrazów (C++, Go, JavaScript) implementowanych po stronie przeglądarki internetowej przy pomocy WebAssembly.
+This application allows for analyzing the execution speed of selected image processing algorithms (C++, Go, JavaScript) implemented on the client-side using WebAssembly.
 
-Można przetestować ją tutaj: https://jolly-cray-4b8db4.netlify.app/
+You can test it here: https://jolly-cray-4b8db4.netlify.app/
 
-## Uruchamianie
+## Running
 
-Potrzebujemy serwera http:
+We need an HTTP server:
 
 `$ python3 -m http.server`
 
-następnie wchodzimy pod adres localhost.
+Then access the localhost address.
 
-## Instalacja i uruchomienie emscripten
+## Installing and running emscripten
 
-- przed startem potrzebne jest dodanie do projektu biblioteki emscripten (opis w poniższym linku)
+- Before starting, you need to add the emscripten library to the project (description in the link below)
 
 https://emscripten.org/docs/getting_started/downloads.html#sdk-download-and-install
 
-- jeśli jest już zainstalowany emscripten to w folderze `/emsdk` używamy komendy
+- If emscripten is already installed, use the following command in the `/emsdk` folder:
 
 `$ source ./emsdk_env.sh`
 
-## Development (c++)
+## Development (C++)
 
-Żeby korzystać z komend emsdk (to samo co wyżej):
+To use emsdk commands (same as above):
 
 `$ source ./emsdk_env.sh`
 
-Można sprawdzić czy wszystko działa
+You can check if everything is working:
 
 `$ emcc --version`
 
-### Budowanie modułu WASM
+### Building the WASM module
 
-Podajemy kolejno nazwe pliku wyjściowego oraz wejsciowego:
+Specify the output filename followed by the input filename:
 
 `$ emcc --bind -o cpp_processing.js processing.cpp`
 
-Dla dużych plików potrzebne dodanie flagi `-s ALLOW_MEMORY_GROWTH=1`
+For large files, you need to add the flag `-s ALLOW_MEMORY_GROWTH=1`
 
 `$ emcc --bind -o cpp_processing.js processing.cpp -s ALLOW_MEMORY_GROWTH=1`
 
-W celu optymalizacji można użyć opcji `-Ox`, gdzie `x` to poziom agresji optymalizacji od 1 do 3
+For optimization, you can use the `-Ox` option, where `x` is the optimization aggressiveness level from 1 to 3
 
 `$ emcc --bind -o cpp_processing.js processing.cpp -s ALLOW_MEMORY_GROWTH=1 -O2`
 
-Algorytmy przetwarzania obrazów znajdują się w pliku `./processing.cpp`
+Image processing algorithms are located in the `./processing.cpp` file
 
 ## Development (Go)
 
-### Budowanie modułu WASM
+### Building the WASM module
 
-Plik `processing.go` traktujemy następującą komendą:
+Treat the `processing.go` file with the following command:
 
 `$ GOOS=js GOARCH=wasm go build -o processing.wasm`
 
-Algorytmy przetwarzania obrazów znajdują się w pliku `./processing.go`
+Image processing algorithms are located in the `./processing.go` file
 
 ## Development (JavaScript)
 
-Algorytmy przetwarzania obrazów znajdują się w pliku `./scripts.js`
+Image processing algorithms are located in the `./scripts.js` file
